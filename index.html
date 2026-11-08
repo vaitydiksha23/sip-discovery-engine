@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SIP Discovery Engine: why first-time investors stop</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔎</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,500;8..60,650&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F4F6F8; --surface:#FFFFFF; --ink:#172033; --muted:#556073; --rule:#D7DDE5;
+  --accent:#1D5FA8; --accent-soft:#E6EEF8; --warn:#9A5600; --warn-soft:#FBF0E1;
+  --serif:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --sans:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#11151B; --surface:#192029; --ink:#E7EBF1; --muted:#A3ACBA; --rule:#2D3541;
+    --accent:#86B6F0; --accent-soft:#1E2B3B; --warn:#F2AE5B; --warn-soft:#33281A; color-scheme: dark; }
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:calc(64px + env(safe-area-inset-top,0px))}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.55;
+  padding-bottom:env(safe-area-inset-bottom,0px)}
+a{color:var(--accent)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+header.top{position:sticky;top:0;z-index:5;background:var(--surface);border-bottom:1px solid var(--rule);
+  padding-top:env(safe-area-inset-top,0px)}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:56px;flex-wrap:wrap}
+.brand{font-family:var(--serif);font-weight:650;font-size:1.05rem}
+nav a{margin-left:18px;text-decoration:none;color:var(--muted);font-weight:500}
+nav a:hover{color:var(--ink)}
+.hero{padding:56px 0 28px}
+.hero h1{font-family:var(--serif);font-weight:650;font-size:clamp(2rem,4.6vw,3.1rem);line-height:1.12;margin:0 0 16px;max-width:20ch}
+.hero p{max-width:62ch;color:var(--muted);font-size:1.08rem;margin:0 0 12px}
+.notice{border-left:3px solid var(--warn);background:var(--warn-soft);padding:10px 14px;max-width:70ch;font-size:.95rem;margin-top:18px}
+section{padding:36px 0;border-top:1px solid var(--rule)}
+h2{font-family:var(--serif);font-weight:650;font-size:1.7rem;margin:0 0 8px}
+h3{font-family:var(--serif);font-weight:500;font-size:1.2rem;margin:28px 0 8px}
+.lede{color:var(--muted);max-width:66ch;margin:0 0 22px}
+.grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:28px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:620px){td.q{white-space:normal}}
+.panel{min-width:0;background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:20px}
+label{display:block;font-weight:600;font-size:.92rem;margin:14px 0 6px}
+label:first-child{margin-top:0}
+.hint{font-weight:400;color:var(--muted)}
+select,input,textarea{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--rule);border-radius:6px;padding:9px 11px}
+textarea{resize:vertical;min-height:120px}
+.count{font-size:.85rem;color:var(--muted);text-align:right;margin-top:4px}
+.btn{display:inline-block;font:inherit;font-weight:600;border:0;border-radius:6px;padding:11px 18px;cursor:pointer;background:var(--accent);color:var(--surface)}
+.btn[disabled]{opacity:.55;cursor:progress}
+.btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent);padding:6px 12px;font-weight:500;font-size:.9rem}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:16px}
+.small{font-size:.88rem;color:var(--muted)}
+.samples{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.empty{color:var(--muted);padding:28px 8px;text-align:center}
+/* the trace: text to tags to metric to findings */
+.trace{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;margin:6px 0 18px;border:1px solid var(--rule);border-radius:10px;overflow:hidden}
+.trace > div{padding:12px 14px;border-right:1px solid var(--rule);position:relative;min-width:0}
+.trace > div:last-child{border-right:0}
+.trace > div:not(:last-child)::after{content:"";position:absolute;right:-7px;top:50%;width:12px;height:12px;background:var(--surface);
+  border-top:1px solid var(--rule);border-right:1px solid var(--rule);transform:translateY(-50%) rotate(45deg);z-index:1}
+.trace .k{font-size:.8rem;color:var(--muted);margin-bottom:4px}
+.trace .v{font-weight:600;font-size:.95rem;overflow-wrap:anywhere}
+.trace .s{font-size:.82rem;color:var(--muted);margin-top:4px;overflow-wrap:anywhere}
+@media (max-width:620px){.trace{grid-template-columns:1fr}.trace > div{border-right:0;border-bottom:1px solid var(--rule)}
+  .trace > div:last-child{border-bottom:0}.trace > div:not(:last-child)::after{right:auto;left:22px;top:auto;bottom:-7px;transform:rotate(135deg)}}
+.verdict{display:flex;gap:10px;align-items:baseline;margin-bottom:12px;flex-wrap:wrap}
+.badge{display:inline-block;border-radius:999px;padding:2px 10px;font-size:.82rem;font-weight:600;border:1px solid currentColor}
+.ok{color:var(--accent)} .warn{color:var(--warn)}
+.checks{list-style:none;padding:0;margin:0 0 18px}
+.checks li{display:grid;grid-template-columns:22px 1fr;gap:6px;padding:5px 0;font-size:.93rem}
+.checks .ic{font-weight:700}
+.checks .d{grid-column:2;color:var(--muted);font-size:.85rem}
+.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-weight:600;color:var(--muted);font-size:.85rem}
+td.q{white-space:nowrap;font-weight:500}
+.clue{font-style:italic;color:var(--muted)}
+.rel{font-size:.8rem}
+.ctx{white-space:pre-wrap;background:var(--bg);border:1px solid var(--rule);border-radius:6px;padding:10px 12px;font-size:.9rem;margin:8px 0 14px;overflow-wrap:anywhere}
+.fallback{border:1px solid var(--warn);background:var(--warn-soft);border-radius:8px;padding:12px 14px;margin-bottom:14px}
+details{border:1px solid var(--rule);border-radius:8px;margin:10px 0;background:var(--surface)}
+summary{cursor:pointer;padding:10px 14px;font-weight:600}
+details > div{padding:0 14px 14px}
+ol.steps{padding-left:1.4em;max-width:76ch}
+ol.steps li{margin:0 0 14px}
+ol.steps b{font-weight:600}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.stat{border-top:2px solid var(--ink);padding-top:8px}
+.stat .n{font-family:var(--serif);font-size:1.9rem;font-weight:650;line-height:1.1}
+.stat .l{color:var(--muted);font-size:.92rem}
+.meta{font-size:.82rem;color:var(--muted);margin-top:12px}
+footer{border-top:1px solid var(--rule);padding:28px 0 40px;color:var(--muted);font-size:.9rem}
+@media (prefers-reduced-motion:no-preference){ .result-in{animation:fade .35s ease-out} @keyframes fade{from{opacity:0}to{opacity:1}} }
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <div class="brand">SIP Discovery Engine</div>
+  <nav aria-label="Sections"><a href="#try">Try it</a><a href="#how">How it works</a><a href="#found">What it found</a></nav>
+</div></header>
+
+<main>
+<div class="wrap hero">
+  <h1>What makes first-time investors stop their SIP?</h1>
+  <p>This engine read 38,963 public conversations about SIPs and mutual funds (app reviews, YouTube comments, Reddit and TradingQ&amp;A) and tagged each one against a fixed codebook of 19 questions. The tags were then linked to the metric: the share of first-time investors with an active SIP 12 months after starting.</p>
+  <p>Paste any review or comment below to run the same tagging step live, with the same prompt and model, and see the quality checks and how the result feeds the metric.</p>
+  <div class="notice">A research prototype for a product case study, built on Groww. It describes what people say; it is not investment advice and does not recommend any fund. Not affiliated with Groww.</div>
+</div>
+
+<section id="try"><div class="wrap">
+  <h2>Try it on any comment</h2>
+  <p class="lede">Choose where the text comes from, paste it, and tag it. Or load one of the real items from the dataset. In the full pipeline, a relevance step first filters out anything not about SIPs; this demo runs the tagging step and the code that follows it.</p>
+  <div class="grid">
+    <div class="panel">
+      <form id="f" novalidate>
+        <label for="src">Where is the text from?</label>
+        <select id="src">
+          <option value="app_review">App review</option>
+          <option value="youtube">YouTube comment</option>
+          <option value="reddit_post">Reddit post</option>
+          <option value="reddit_comment">Reddit comment</option>
+          <option value="forum_question">Forum question (TradingQ&amp;A)</option>
+          <option value="forum_reply">Forum reply (TradingQ&amp;A)</option>
+        </select>
+        <div id="appBox"><label for="app">Which app?</label>
+          <select id="app"><option>Groww</option><option>INDmoney</option><option>Zerodha Coin</option><option>ET Money</option><option>Paytm Money</option><option>Kuvera</option></select></div>
+        <div id="titleBox" hidden><label for="title"><span id="titleLabel">Video title</span> <span class="hint">(optional)</span></label>
+          <input id="title" maxlength="300"></div>
+        <div id="parentBox" hidden><label for="parent">Replying to <span class="hint">(optional, the comment above it)</span></label>
+          <textarea id="parent" maxlength="600" style="min-height:70px"></textarea></div>
+        <label for="text">Text to tag</label>
+        <textarea id="text" maxlength="1500" placeholder="For example: My SIP failed this month because my salary came late. Will Groww cancel it?"></textarea>
+        <div class="count"><span id="cnt">0</span> / 1,500</div>
+        <p class="small">English, Hindi, Marathi or Hinglish. Please don't paste names, phone numbers or account details. Nothing you paste is stored.</p>
+        <div class="row"><button class="btn" id="go" type="submit">Tag this text</button><span class="small" id="status" role="status" aria-live="polite"></span></div>
+      </form>
+      <h3>Load a real item from the dataset</h3>
+      <div class="samples" id="samples"></div>
+    </div>
+    <div class="panel" id="out" aria-live="polite"><div class="empty">Tags, quality checks and the link to the metric will appear here.</div></div>
+  </div>
+</div></section>
+
+<section id="how"><div class="wrap">
+  <h2>How the engine works</h2>
+  <p class="lede">Six steps, run in Google Colab on the full corpus, with a human checkpoint at each one. AI is used only where reading meaning is needed (steps 3 and 4); everything else is fixed code, so it is cheap, repeatable and auditable.</p>
+  <div class="cols">
+    <div class="stat"><div class="n">367,555</div><div class="l">public items collected from 5 source types</div></div>
+    <div class="stat"><div class="n">38,963</div><div class="l">items tagged: 35,796 relevant plus 3,167 uncertain</div></div>
+    <div class="stat"><div class="n">$14.72</div><div class="l">total AI cost (relevance $6.58, tagging $8.14), under the $20 budget</div></div>
+  </div>
+  <h3>The steps</h3>
+  <ol class="steps">
+    <li><b>Collect.</b> Play Store reviews for Groww and 5 competitors from 1 Jan 2023 (about 295,000), App Store reviews, 59,394 comments from 93 personal finance videos, 9,752 TradingQ&amp;A posts and 1,406 Reddit items. Public data only; usernames are never used. X and Instagram were skipped (paid access and platform terms).</li>
+    <li><b>Content check (code).</b> Removes empty and generic items, and labels replies prompted by a creator's call to action. Excluded items keep a reason; nothing is deleted.</li>
+    <li><b>Relevance (AI, Claude Haiku 5.5).</b> Five models were tested on 100 hand-labelled items; Haiku won on recall within budget. A blind audit afterwards put recall at about 80% (range 67 to 91%).</li>
+    <li><b>Tag with the codebook (AI).</b> 19 fixed questions: kind of SIP, first-time or not, why they started, what they expected, what they did, what triggered it, what worried them, what they check, where they go for help, what they wish for, and segment signals. The AI must pick from fixed options and quote the words behind every tag. Prompt v1.5, refined five times on a practice set.</li>
+    <li><b>Derive (code).</b> Fixed rules turn tags into the metric view: scope (mutual fund SIP or not), whose experience it is, where it sits in the metric tree, a severity tier and an opportunity path.</li>
+    <li><b>Quantify and rank (code plus judgement).</b> Shares are counted per source, never pooled. Opportunities pass four gates, then sit on a frequency by severity grid. Findings were then tested in 4 user interviews.</li>
+  </ol>
+  <h3>How quality was checked</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Check</th><th>Result</th><th>What it means</th></tr></thead>
+    <tbody>
+      <tr><td>Golden set: 20 items labelled by hand, scored against the AI (prompt v1.4, before the final run)</td><td>8 of 11 scoreable questions pass the bar (80% for action and trigger, 70% for the rest)</td><td>Pass: kind of SIP 100%, first-time 100%, journey stage 80%, trigger 80%, what they check 75%, where they go 78%, other app 100%, whose experience 100%. Below: action 44%, worries 67%, feature 45%. Eight questions had too few examples to score.</td></tr>
+      <tr><td>Fresh blind check of the action question (prompt v1.5, 30 new items)</td><td>Only 8 of 30 items described an action; 1 of 8 matched</td><td>The action question is used only at a coarse level, and every key finding was checked against real quotes and interviews.</td></tr>
+      <tr><td>Quote check on 4,000 tagged items</td><td>99.5% of quoted words were found in the item</td><td>The AI is not inventing evidence. The live demo runs the same check on every result.</td></tr>
+      <tr><td>Relevance audit</td><td>Recall about 80%</td><td>Some relevant items were missed, so counts are a floor, not a census.</td></tr>
+    </tbody>
+  </table></div>
+  <p class="meta">Limitations: the golden set was labelled by one person; App Store collection was incomplete for four competitors; public posts over-represent people with problems; segment signals (age, income) are rarely stated, so segments come from interviews.</p>
+</div></section>
+
+<section id="found"><div class="wrap">
+  <h2>Doubt is the most common experience, but cash collisions are what break the SIP</h2>
+  <p class="lede">Read on the analysis set: 20,146 mutual fund items, of which 12,257 describe the writer's own experience or someone they know. Frequency is a theme's rank within each source; severity is the share of that theme's items that ended in a lapse or a missed instalment.</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Opportunity area</th><th>How often</th><th>How often it ends in a lapse</th><th>Interviews</th></tr></thead>
+    <tbody>
+      <tr><td><b>Cash collision</b>: failed debits, mandate or bank issues, unexpected debits</td><td>"Payment failed" in the top 5 in 9 of 11 sources</td><td>High: 59 to 100% of failed-instalment worries</td><td>3 of 4 had a failed debit; a penalty triggered an urge to cancel</td></tr>
+      <tr><td><b>Doubt</b>: saw losses, thinking of stopping, "am I doing it right"</td><td>"Saw losses" top 5 in 8 of 9; "am I doing it right" first on Reddit and YouTube</td><td>Very low: 0 to 1%</td><td>Doubt led to opening the pause screen and closing it, never to a pause</td></tr>
+      <tr><td><b>Trust and operations</b>: money not showing, safety, withdrawal</td><td>Safety and withdrawal top 5 in 10 of 11</td><td>Low to medium: 3 to 14%</td><td>Concrete gaps, but not what ended SIPs</td></tr>
+      <tr><td><b>Life-event cash need</b></td><td>Low in public data</td><td>Hard to measure</td><td>Behind both actual pauses</td></tr>
+      <tr><td><b>App technical issues</b> (scoped out: an engineering backlog item)</td><td>The top trigger in 10 of 11 sources</td><td>Medium: 12%</td><td>Not raised</td></tr>
+    </tbody>
+  </table></div>
+  <p class="lede" style="margin-top:18px">Target chosen: the first tight month in a young salaried first-timer's first year, when the SIP date collides with a cash shortfall. The engine shows it is common and severe; interviews showed why: the break is temporary and cash-driven, yet it counts as a lapse.</p>
+</div></section>
+</main>
+
+<footer><div class="wrap">
+  Research prototype for a product case study. Not investment advice, no fund recommendations, not affiliated with Groww. Live tags use Claude Haiku 5.5 with tagging prompt v1.5; text you paste is sent to the AI service for tagging and is not stored by this site.
+</div></footer>
+
+<script>
+const EXAMPLES = [
+ {
+  "key": "groww_appstore:177",
+  "title": "A failed instalment on Groww",
+  "source": "groww_appstore",
+  "context": "App: Groww\nReview: Sip Declined. On groww when I will do sip it is rejected after 7-8 days dont know why it is happened with 4 different mutual funds, I have raised a ticket but they are not responding worst experience ever, I will not use groww anymore",
+  "tags": {
+   "Q1": {
+    "v": [
+     "MF explicit"
+    ],
+    "clue": "4 different mutual funds",
+    "src": "item",
+    "grounded": true
+   },
+   "Q2": {
+    "v": [
+     "Not clear"
+    ],
+    "clue": "",
+    "src": "item",
+    "grounded": true
+   },
+   "Q6": {
+    "v": [
+     "Payment failed"
+    ],
+    "clue": "it is rejected after 7-8 days",
+    "src": "item",
+    "grounded": true
+   },
+   "Q8": {
+    "v": [
+     "Failed instalment"
+    ],
+    "clue": "dont know why it is happened",
+    "src": "item",
+    "grounded": true
+   },
+   "Q10": {
+    "v": [
+     "Groww customer support"
+    ],
+    "clue": "I have raised a ticket",
+    "src": "item",
+    "grounded": true
+   },
+   "S1": {
+    "v": [
+     "Customer support or help"
+    ],
+    "clue": "I have raised a ticket",
+    "src": "item",
+    "grounded": true
+   },
+   "S4": {
+    "v": [
+     "Own experience"
+    ],
+    "clue": "Sip Declined",
+    "src": "item",
+    "grounded": true
+   }
+  },
+  "reason": "SIPs across four funds keep getting declined; ticket unanswered; user unsure why.",
+  "confidence": "high"
+ },
+ {
+  "key": "reddit:122",
+  "title": "A tight month: big credit card bill",
+  "source": "reddit",
+  "context": "Post title: Pause SIP\nPost: I want to pause my SIP next month due to a high credit card bill (Coldplay concert). I know this is the ideal time to buy but I have to pause around 50% of my SIP amount Out of the following, which one would be the best to skip for one month without major loss of opportunity? UTI Nifty 50, PPFC, Quant Small Cap, Nasdaq100",
+  "tags": {
+   "Q1": {
+    "v": [
+     "MF explicit"
+    ],
+    "clue": "UTI Nifty 50, PPFC, Quant Small Cap",
+    "src": "item",
+    "grounded": true
+   },
+   "Q2": {
+    "v": [
+     "Not clear"
+    ],
+    "clue": "",
+    "src": "item",
+    "grounded": true
+   },
+   "Q6": {
+    "v": [
+     "Considering stopping",
+     "Reduced amount"
+    ],
+    "clue": "I want to pause my SIP next month",
+    "src": "item",
+    "grounded": true
+   },
+   "Q7": {
+    "v": [
+     "Expenses went up or new priority"
+    ],
+    "clue": "high credit card bill (Coldplay concert)",
+    "src": "item",
+    "grounded": true
+   },
+   "Q8": {
+    "v": [
+     "Am I doing it right"
+    ],
+    "clue": "which one would be the best to skip",
+    "src": "item",
+    "grounded": true
+   },
+   "Q10": {
+    "v": [
+     "Online communities or forums"
+    ],
+    "clue": "which one would be the best to skip",
+    "src": "item",
+    "grounded": true
+   },
+   "S4": {
+    "v": [
+     "Own experience"
+    ],
+    "clue": "I want to pause my SIP next month",
+    "src": "item",
+    "grounded": true
+   }
+  },
+  "reason": "Plans to pause about half of SIP due to card bill; asks which fund to skip.",
+  "confidence": "high"
+ },
+ {
+  "key": "groww_play:201996",
+  "title": "Money deducted, investment not showing",
+  "source": "groww_play",
+  "context": "App: Groww\nReview: I invested in mutual fund and the money is deducted from my account but still it isn't showing in dashboard",
+  "tags": {
+   "Q1": {
+    "v": [
+     "MF explicit"
+    ],
+    "clue": "invested in mutual fund",
+    "src": "item",
+    "grounded": true
+   },
+   "Q2": {
+    "v": [
+     "Not clear"
+    ],
+    "clue": "",
+    "src": "item",
+    "grounded": true
+   },
+   "Q8": {
+    "v": [
+     "Payment taken, investment not showing"
+    ],
+    "clue": "money is deducted from my account but still it isn't showing",
+    "src": "item",
+    "grounded": true
+   },
+   "S1": {
+    "v": [
+     "Portfolio or returns screen"
+    ],
+    "clue": "isn't showing in dashboard",
+    "src": "item",
+    "grounded": true
+   },
+   "S4": {
+    "v": [
+     "Own experience"
+    ],
+    "clue": "I invested in mutual fund",
+    "src": "item",
+    "grounded": true
+   }
+  },
+  "reason": "Mutual fund investment debited but not showing in the dashboard.",
+  "confidence": "high"
+ },
+ {
+  "key": "youtube_comments:43106",
+  "title": "Losses and doubt (Hinglish)",
+  "source": "youtube_comments",
+  "context": "Video title: SIP कितना safe है? Are Mutual Fund Safe ? SAGAR SINHA\nComment: Mai 7 mutual fund sip 32k monthly kar raha hu mera 2 days me 3000 ka loss hua kya karu band kar du ya start rakhu",
+  "tags": {
+   "Q1": {
+    "v": [
+     "MF explicit"
+    ],
+    "clue": "Mai 7 mutual fund sip",
+    "src": "item",
+    "grounded": true
+   },
+   "Q2": {
+    "v": [
+     "Not clear"
+    ],
+    "clue": "",
+    "src": "item",
+    "grounded": true
+   },
+   "Q6": {
+    "v": [
+     "Considering stopping",
+     "Still continuing"
+    ],
+    "clue": "sip 32k monthly kar raha hu",
+    "src": "item",
+    "grounded": true
+   },
+   "Q7": {
+    "v": [
+     "Saw losses"
+    ],
+    "clue": "mera 2 days me 3000 ka loss hua",
+    "src": "item",
+    "grounded": true
+   },
+   "Q8": {
+    "v": [
+     "Am I doing it right"
+    ],
+    "clue": "kya karu band kar du ya start rakhu",
+    "src": "item",
+    "grounded": true
+   },
+   "Q10": {
+    "v": [
+     "Videos or creators"
+    ],
+    "clue": "kya karu band kar du ya start rakhu",
+    "src": "item",
+    "grounded": true
+   },
+   "S4": {
+    "v": [
+     "Own experience"
+    ],
+    "clue": "Mai 7 mutual fund sip 32k",
+    "src": "item",
+    "grounded": true
+   }
+  },
+  "reason": "Investor with 7 MF SIPs at 32k monthly, facing a loss, asks creator whether to stop or continue.",
+  "confidence": "high"
+ },
+ {
+  "key": "youtube_comments:56913",
+  "title": "Low returns, thought of stopping",
+  "source": "youtube_comments",
+  "context": "Video title: Why SIP is the biggest LIE for Indian Investors\nComment: Posting my comment before starting with this video - my MF returns are having a XIRR of 4.09 percent after 3 years of consistent SIP 2000 1st year 4000 2nd year 10000 3rd year So much demotivated I was, even thought of taking it out and keeping in my saving account instead 🙁",
+  "tags": {
+   "Q1": {
+    "v": [
+     "MF explicit"
+    ],
+    "clue": "my MF returns",
+    "src": "item",
+    "grounded": true
+   },
+   "Q2": {
+    "v": [
+     "Experienced"
+    ],
+    "clue": "after 3 years of consistent SIP",
+    "src": "item",
+    "grounded": true
+   },
+   "Q5": {
+    "v": [
+     "Over 12 months"
+    ],
+    "clue": "after 3 years of consistent SIP",
+    "src": "item",
+    "grounded": true
+   },
+   "Q6": {
+    "v": [
+     "Considering stopping"
+    ],
+    "clue": "even thought of taking it out",
+    "src": "item",
+    "grounded": true
+   },
+   "Q7": {
+    "v": [
+     "Returns lower than expected"
+    ],
+    "clue": "XIRR of 4.09 percent",
+    "src": "item",
+    "grounded": true
+   },
+   "Q9a": {
+    "v": [
+     "Overall portfolio value or returns"
+    ],
+    "clue": "my MF returns are having a XIRR",
+    "src": "item",
+    "grounded": true
+   },
+   "S4": {
+    "v": [
+     "Own experience"
+    ],
+    "clue": "my MF returns are having a XIRR",
+    "src": "item",
+    "grounded": true
+   }
+  },
+  "reason": "Three-year MF SIP with 4.09% XIRR; demotivated and considering withdrawing.",
+  "confidence": "high"
+ },
+ {
+  "key": "youtube_comments:3570",
+  "title": "Cancelled, but status still active (Hinglish)",
+  "source": "youtube_comments",
+  "context": "Video title: Mutual Fund sip cancel karne par kitna paisa milta hai | Sip Close | Full Guide Hindi |\nComment: sip ko cancle kiya hai but status abhi bhi active he aa rha hai 5 din ho gye cesed bhi nhi hunda",
+  "tags": {
+   "Q1": {
+    "v": [
+     "MF inferred"
+    ],
+    "clue": "Mutual Fund sip cancel karne par",
+    "src": "context",
+    "grounded": true
+   },
+   "Q2": {
+    "v": [
+     "Not clear"
+    ],
+    "clue": "",
+    "src": "item",
+    "grounded": true
+   },
+   "Q6": {
+    "v": [
+     "Cancelled"
+    ],
+    "clue": "sip ko cancle kiya hai",
+    "src": "item",
+    "grounded": true
+   },
+   "Q8": {
+    "v": [
+     "SIP status (is it running)"
+    ],
+    "clue": "status abhi bhi active he aa rha hai",
+    "src": "item",
+    "grounded": true
+   },
+   "S1": {
+    "v": [
+     "Cancel flow"
+    ],
+    "clue": "sip ko cancle kiya hai",
+    "src": "item",
+    "grounded": true
+   },
+   "S4": {
+    "v": [
+     "Own experience"
+    ],
+    "clue": "sip ko cancle kiya hai",
+    "src": "item",
+    "grounded": true
+   }
+  },
+  "reason": "Cancelled SIP but status still shows active after five days; SIP status is confusing.",
+  "confidence": "high"
+ },
+ {
+  "key": "zerodhacoin_play:1602",
+  "title": "Mandate problem on a competitor app",
+  "source": "zerodhacoin_play",
+  "context": "App: Zerodha Coin\nReview: Not user friendly Interface is complicated. E mandate not working properly Even after the due date , money didn't got deducted. Tried every thing still not working.",
+  "tags": {
+   "Q1": {
+    "v": [
+     "MF inferred"
+    ],
+    "clue": "Zerodha Coin",
+    "src": "context",
+    "grounded": true
+   },
+   "Q2": {
+    "v": [
+     "Not clear"
+    ],
+    "clue": "",
+    "src": "item",
+    "grounded": true
+   },
+   "Q6": {
+    "v": [
+     "Payment failed"
+    ],
+    "clue": "money didn't got deducted",
+    "src": "item",
+    "grounded": true
+   },
+   "Q7": {
+    "v": [
+     "Bank or mandate issue"
+    ],
+    "clue": "E mandate not working properly",
+    "src": "item",
+    "grounded": true
+   },
+   "Q8": {
+    "v": [
+     "Failed instalment"
+    ],
+    "clue": "money didn't got deducted",
+    "src": "item",
+    "grounded": true
+   },
+   "S1": {
+    "v": [
+     "AutoPay or mandate"
+    ],
+    "clue": "E mandate not working properly",
+    "src": "item",
+    "grounded": true
+   },
+   "S4": {
+    "v": [
+     "Own experience"
+    ],
+    "clue": "Even after the due date",
+    "src": "item",
+    "grounded": true
+   }
+  },
+  "reason": "E-mandate failed and money not deducted after due date despite retries.",
+  "confidence": "high"
+ },
+ {
+  "key": "youtube_comments:46525",
+  "title": "Staying invested through a loss (Hinglish)",
+  "source": "youtube_comments",
+  "context": "Video title: SIP will make you POOR? The TRUTH! | SIP Investment In Hindi | Mutual Funds For Beginners\nComment: Main pichle 4 sall se invest he kar raha hu aor portfolio loss mein hai meri par mine aapna investment nahi stop kiya aor na he amount.",
+  "tags": {
+   "Q1": {
+    "v": [
+     "MF inferred"
+    ],
+    "clue": "Mutual Funds For Beginners",
+    "src": "context",
+    "grounded": true
+   },
+   "Q2": {
+    "v": [
+     "Experienced"
+    ],
+    "clue": "pichle 4 sall se invest",
+    "src": "item",
+    "grounded": true
+   },
+   "Q5": {
+    "v": [
+     "Over 12 months"
+    ],
+    "clue": "pichle 4 sall se invest",
+    "src": "item",
+    "grounded": true
+   },
+   "Q6": {
+    "v": [
+     "Still continuing"
+    ],
+    "clue": "mine aapna investment nahi stop kiya",
+    "src": "item",
+    "grounded": true
+   },
+   "Q7": {
+    "v": [
+     "Saw losses"
+    ],
+    "clue": "portfolio loss mein hai",
+    "src": "item",
+    "grounded": true
+   },
+   "S4": {
+    "v": [
+     "Own experience"
+    ],
+    "clue": "Main pichle 4 sall se invest",
+    "src": "item",
+    "grounded": true
+   }
+  },
+  "reason": "Invests for four years, portfolio in loss, still continuing; title indicates mutual funds.",
+  "confidence": "high"
+ }
+];
+
+const NAMES = { Q1:'Kind of SIP', Q2:'First-time investor?', Q3a:'Why they started', Q3b:'What they expected', Q4:'Who influenced them',
+  Q5:'Stage in the journey', Q6:'What they did', Q7:'What triggered it', Q8:'What worried or confused them', Q9a:'What they check',
+  Q9b:'How often', Q10:'Where they go when unsure', Q11:'What they wish for', S1:'App feature mentioned', S2:'Other app mentioned',
+  S3_age:'Age', S3_income:'Income type', S3_source:'Money source', S4:'Whose experience' };
+const ORDER = Object.keys(NAMES);
+const RELIABILITY = { Q1:['pass','100%'], Q2:['pass','100%'], Q5:['pass','80%'], Q7:['pass','80%'], Q9a:['pass','75%'], Q10:['pass','78%'],
+  S2:['pass','100%'], S4:['pass','100%'], Q6:['below','44%'], Q8:['below','67%'], S1:['below','45%'] };
+const FALLBACKS = ['Not mentioned','Not stated','Not clear','Unclear'];
+
+// ---------- Derived layers (fixed rules, same as the findings stage) ----------
+const TIER = { 'Cancelled':1, 'Stopped (method unclear)':1, 'Auto-cancelled':1, 'Moved to another app':1,
+  'Paused':2, 'Skipped':2, 'Payment failed':2, 'Reduced amount':3, 'Withdrew money':3, 'Considering stopping':4 };
+const TIER_NAME = {1:'1: Lapsed', 2:'2: Missed an instalment', 3:'3: Reduced or took money out', 4:'4: Considering stopping', 5:'5: Worried, no action'};
+const PATHS = {
+  'Cash': [['Q7','Needed money (emergency or expense)'],['Q7','Wanted to pause'],['Q7','Wanted to change amount or date'],['Q7','Bank or mandate issue'],
+           ['Q6','Payment failed'],['Q8','Failed instalment'],['Q8','Unexpected or extra debit'],['Q11','Easier ways to change, skip or restart'],['Q11','Pause option']],
+  'Doubt': [['Q7','Saw losses'],['Q7','Returns lower than expected'],['Q6','Considering stopping'],['Q8','Am I doing it right'],
+            ['Q8','Whether a drop is normal / why it moves'],['Q8','How long until results'],['Q8','Reading returns, terms and charts'],
+            ['Q11','Simpler numbers and terms on screen'],['Q11','Goal progress tracking']],
+  'Trust and operations': [['Q8','Payment taken, investment not showing'],['Q8','Safety of money and platform'],['Q8','What happens to invested money / withdrawing'],
+            ['Q7','Unexpected charges or tax'],['Q7','App technical issue'],['Q11','Clear charges and tax info']] };
+const TRIGGER_GROUP = {
+  'Income dropped or job change':'life and money','Expenses went up or new priority':'life and money','Needed money (emergency or expense)':'life and money','Goal completed':'life and money',
+  'Saw losses':'what they saw','Returns lower than expected':'what they saw','Markets fell (news)':'what they saw','Markets rose':'what they saw',
+  'Wanted to pause':'wanted to adjust','Wanted to change amount or date':'wanted to adjust',
+  'Not enough balance':'system problem','Bank or mandate issue':'system problem','App technical issue':'system problem','Unexpected charges or tax':'system problem','KYC or account verification issue':'system problem',
+  'Advice from family or friends':'other people','Influencer or online content':'other people',
+  'Stopped believing SIPs work for them':'belief and drift','Unhappy with Groww':'belief and drift','Found a better option elsewhere':'belief and drift','Forgot or lost interest':'belief and drift' };
+
+const vals = (tags, f) => (tags[f] && tags[f].v ? tags[f].v : []).filter(x => !FALLBACKS.includes(x));
+const uniq = a => [...new Set(a)];
+
+function treePath(tags) {
+  const q6 = vals(tags,'Q6').map(x => x === 'Paused' ? 'Stopped (method unclear)' : x);
+  const q7 = vals(tags,'Q7');
+  const has = x => q6.includes(x);
+  const staying = ['Still continuing','Increased or added a SIP','Reduced amount','Changed SIP date'].some(has);
+  const lapses = ['Skipped','Cancelled','Moved to another app','Stopped (method unclear)','Payment failed','Auto-cancelled'].filter(has);
+  const sysTrig = q7.filter(t => TRIGGER_GROUP[t] === 'system problem');
+  const flag = has('Withdrew money') ? 'Withdrew money: guardrail flag' : '';
+  let path;
+  if (has('Resumed after a gap')) {
+    if (['Cancelled','Auto-cancelled','Stopped (method unclear)'].some(has)) path = 'Lapsed and returned → SIP ended and restarted';
+    else if (['Skipped','Payment failed'].some(has)) path = 'Lapsed and returned → SIP stayed live';
+    else path = 'Lapsed and returned → How unclear';
+  } else if (lapses.length && staying) {
+    path = 'Lapsed and returned → SIP stayed live';
+  } else if (lapses.length) {
+    const one = a => {
+      if (a === 'Skipped') return 'Lapsed → Chose to lapse → Skip';
+      if (a === 'Cancelled' || a === 'Moved to another app') {
+        const g = uniq(q7.map(t => TRIGGER_GROUP[t]).filter(Boolean));
+        return 'Lapsed → Chose to lapse → Cancel → ' + (g.length ? g.join(' + ') : 'reason not stated');
+      }
+      if (a === 'Stopped (method unclear)') return 'Lapsed → Chose to lapse → Method unclear';
+      if (a === 'Payment failed') return 'Lapsed → Payment failed → ' + (sysTrig.length ? sysTrig.join(' + ') : 'reason not stated');
+      if (a === 'Auto-cancelled') {
+        if (has('Skipped')) return 'Lapsed → Chose to lapse → Skip';
+        if (has('Payment failed') || sysTrig.length) return 'Lapsed → Payment failed → ' + (sysTrig.length ? sysTrig.join(' + ') : 'reason not stated');
+        return 'Lapsed → Cause unclear';
+      }
+    };
+    const paths = uniq(lapses.map(one));
+    path = paths.length === 1 ? paths[0] : 'Unmapped: several lapse actions, for manual review';
+  } else if (staying) path = 'Never lapsed';
+  else if (has('Considering stopping')) path = 'Outside the tree: at risk';
+  else if (has('Not started yet')) path = 'Outside the tree: not started yet';
+  else path = 'No box: no SIP action described';
+  return { path, flag };
+}
+function derive(tags) {
+  const q1 = vals(tags,'Q1')[0] || 'Unclear';
+  const scope = q1.startsWith('MF') ? ['In scope', 'Mutual fund SIP (' + q1.replace('MF ','') + ')']
+             : q1 === 'Stock, ETF or Gold' ? ['Out of scope', 'Stock, ETF or gold SIP, kept separate'] : ['Scope unclear', 'Kept out of the main counts'];
+  const s4 = vals(tags,'S4')[0] || 'Not clear';
+  const lane = /Own experience|Someone they know/.test(s4) ? 'Investor voice' : (/People in general/.test(s4) ? 'Observer voice' : 'Voice unclear');
+  const q6 = vals(tags,'Q6'); const t = q6.map(x => TIER[x]).filter(Boolean);
+  const tier = t.length ? Math.min(...t) : (q6.includes('Not started yet') ? null : (vals(tags,'Q8').length ? 5 : null));
+  const paths = Object.entries(PATHS).filter(([,list]) => list.some(([f,l]) => vals(tags,f).includes(l))).map(([n]) => n);
+  return { scope, lane, tier, paths, ...treePath(tags) };
+}
+
+// ---------- Rendering ----------
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function relBadge(f) {
+  const r = RELIABILITY[f];
+  if (!r) return '<span class="rel small">Too few to score</span>';
+  return r[0] === 'pass' ? '<span class="rel ok">✓ Passed (' + r[1] + ')</span>' : '<span class="rel warn">! Below bar (' + r[1] + ')</span>';
+}
+function renderResult(r, opts) {
+  const d = derive(r.tags);
+  const verdictText = { passed:['ok','Passed all quality checks'], warnings:['warn','Shown with warnings'], not_relevant:['warn','Probably not about a SIP'] }[r.verdict] || ['ok','Stored result'];
+  let h = '';
+  if (opts && opts.stored) h += '<p class="small" style="margin-top:0">Stored result from the full run (4 Nov 2026), item ' + esc(opts.key) + '.</p>';
+  else h += '<div class="verdict"><span class="badge ' + verdictText[0] + '">' + esc(verdictText[1]) + '</span><span class="small">Confidence: ' + esc(r.confidence) + '</span></div>';
+  h += '<div class="small">What the AI read</div><div class="ctx">' + esc(r.context) + '</div>';
+  h += '<div class="trace" aria-label="How this item feeds the metric">'
+    + '<div><div class="k">Scope</div><div class="v">' + esc(d.scope[0]) + '</div><div class="s">' + esc(d.scope[1]) + '</div></div>'
+    + '<div><div class="k">Voice</div><div class="v">' + esc(d.lane) + '</div><div class="s">' + esc(vals(r.tags,'S4')[0] || 'Not clear') + '</div></div>'
+    + '<div><div class="k">Metric tree</div><div class="v">' + esc(d.path) + '</div>' + (d.flag ? '<div class="s">' + esc(d.flag) + '</div>' : '') + '</div>'
+    + '<div><div class="k">Findings view</div><div class="v">' + (d.tier ? 'Tier ' + esc(TIER_NAME[d.tier]) : 'No severity tier') + '</div><div class="s">Path: ' + esc(d.paths.length ? d.paths.join(', ') : 'none') + '</div></div>'
+    + '</div>';
+  if (r.checks) {
+    h += '<div class="small">Quality checks (code, run on every answer)</div><ul class="checks">';
+    r.checks.forEach(c => { h += '<li><span class="ic ' + (c.pass ? 'ok' : 'warn') + '" aria-label="' + (c.pass ? 'passed' : 'warning') + '">' + (c.pass ? '✓' : '!') + '</span><span>' + esc(c.label) + '</span>' + (c.detail ? '<span class="d">' + esc(c.detail) + '</span>' : '') + '</li>'; });
+    h += '</ul>';
+  }
+  h += '<div class="tablewrap"><table><thead><tr><th>Question</th><th>Answer</th><th>Words quoted</th><th>Golden-set check</th></tr></thead><tbody>';
+  ORDER.forEach(f => {
+    const t = r.tags[f]; if (!t) return;
+    const isFb = t.v.every(x => FALLBACKS.includes(x));
+    h += '<tr><td class="q">' + esc(NAMES[f]) + '</td><td>' + (isFb ? '<span class="small">' + esc(t.v.join('; ')) + '</span>' : esc(t.v.join('; ')))
+      + (t.grounded === false ? ' <span class="warn small">(quote not found)</span>' : '') + '</td><td class="clue">'
+      + (t.clue ? '"' + esc(t.clue) + '"' + (t.src === 'context' ? ' <span class="small">(from context)</span>' : '') : '') + '</td><td>' + relBadge(f) + '</td></tr>';
+  });
+  h += '</tbody></table></div>';
+  if (r.reason) h += '<p class="meta">Model\'s one-line reading: ' + esc(r.reason) + '</p>';
+  if (opts && opts.meta) h += '<p class="meta">' + esc(opts.meta) + '</p>';
+  h += '<p class="meta">Questions not shown were not mentioned in the text. Reliability comes from the 20-item golden set; treat "below bar" tags as indicative only.</p>';
+  return h;
+}
+function renderFallback(message) {
+  let h = '<div class="fallback"><b>Live tagging is unavailable.</b> ' + esc(message) + '</div><p class="small">These are real items with the tags the engine gave them in the full run, passed through the same rules.</p>';
+  EXAMPLES.forEach((e, i) => { h += '<details' + (i === 0 ? ' open' : '') + '><summary>' + esc(e.title) + '</summary><div>' + renderResult(e, { stored:true, key:e.key }) + '</div></details>'; });
+  return h;
+}
+
+// ---------- Form ----------
+const $ = id => document.getElementById(id);
+const TITLE_LABEL = { youtube:'Video title', reddit_post:'Post title', reddit_comment:'Post title', forum_question:'Thread title', forum_reply:'Thread title' };
+function syncForm() {
+  const s = $('src').value;
+  $('appBox').hidden = s !== 'app_review';
+  $('titleBox').hidden = s === 'app_review';
+  $('titleLabel').textContent = TITLE_LABEL[s] || 'Title';
+  $('parentBox').hidden = !['youtube','reddit_comment','forum_reply'].includes(s);
+}
+$('src').addEventListener('change', syncForm);
+$('text').addEventListener('input', () => { $('cnt').textContent = $('text').value.length.toLocaleString('en-IN'); });
+syncForm();
+
+const SRC_MAP = s => s.endsWith('_play') || s.endsWith('_appstore') ? 'app_review' : s === 'youtube_comments' ? 'youtube' : s === 'tradingqna' ? 'forum_question' : 'reddit_post';
+function loadExample(e) {
+  const lines = e.context.split('\n');
+  const get = p => { const l = lines.find(x => x.startsWith(p)); return l ? l.slice(p.length) : ''; };
+  let src = SRC_MAP(e.source);
+  const parent = get('Replying to: ') || get('Original post: ') || get('Opening question: ');
+  if (src === 'reddit_post' && /^(Comment): /m.test(e.context)) src = 'reddit_comment';
+  if (src === 'forum_question' && /^Reply: /m.test(e.context)) src = 'forum_reply';
+  $('src').value = src; syncForm();
+  $('app').value = get('App: ') || 'Groww';
+  $('title').value = get('Video title: ') || get('Post title: ') || get('Thread title: ');
+  $('parent').value = parent;
+  $('text').value = lines[lines.length - 1].replace(/^(Review|Comment|Reply|Post|Question): /, '');
+  $('text').dispatchEvent(new Event('input'));
+  $('status').textContent = 'Loaded. Select "Tag this text" to run it live.';
+  $('text').focus();
+}
+EXAMPLES.forEach(e => { const b = document.createElement('button'); b.type = 'button'; b.className = 'btn ghost'; b.textContent = e.title; b.onclick = () => loadExample(e); $('samples').appendChild(b); });
+
+$('f').addEventListener('submit', async ev => {
+  ev.preventDefault();
+  const text = $('text').value.trim();
+  if (!text) { $('status').textContent = 'Paste some text first.'; $('text').focus(); return; }
+  const go = $('go'); go.disabled = true; $('status').textContent = 'Tagging, usually 5 to 15 seconds…';
+  const out = $('out');
+  try {
+    const r = await fetch('/api/tag', { method:'POST', headers:{ 'content-type':'application/json' },
+      body: JSON.stringify({ source:$('src').value, app:$('app').value, title:$('title').value, parent:$('parent').value, text }) });
+    const data = await r.json().catch(() => ({}));
+    if (data.ok) {
+      out.innerHTML = '<div class="result-in">' + renderResult(data, { meta: 'Live result: ' + data.model + ', prompt ' + data.prompt + ', ' + data.seconds + ' s, ' + data.tokens.input.toLocaleString('en-IN') + ' input and ' + data.tokens.output.toLocaleString('en-IN') + ' output tokens.' }) + '</div>';
+      $('status').textContent = 'Done.';
+    } else if (data.fallback) {
+      out.innerHTML = renderFallback(data.message || 'The pre-tagged examples below show what it produces.');
+      $('status').textContent = '';
+    } else {
+      $('status').textContent = data.reason || 'Something went wrong. Check the text and try again.';
+    }
+  } catch (e) {
+    out.innerHTML = renderFallback('The page could not reach the tagger. The pre-tagged examples below show what it produces.');
+    $('status').textContent = '';
+  } finally { go.disabled = false; }
+});
+</script>
+</body>
+</html>
