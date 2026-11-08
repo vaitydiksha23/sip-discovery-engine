@@ -15,17 +15,20 @@
 <style>
 :root{
   --bg:#F3F5F8; --surface:#FFFFFF; --sunk:#EEF1F5; --ink:#162033; --muted:#566175; --rule:#D8DEE6;
-  --accent:#1D5FA8; --accent-soft:#E5EEF9; --warn:#975400; --warn-soft:#FBF0E0; --band:#E9EFF7;
+  --accent:#1D5FA8; --accent-soft:#E5EEF9; --warn:#975400; --warn-soft:#FBF0E0; --band:#E9EFF7; --teal:#0B7468; --teal-soft:#DDF2EE; --violet:#5F45B8; --violet-soft:#ECE8FA;
+  --chev:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23566175' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   --serif:"Source Serif 4", Georgia, "Times New Roman", serif;
   --sans:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){ --bg:#10141A; --surface:#181F28; --sunk:#131920; --ink:#E7EBF1; --muted:#A2ABB9; --rule:#2B3440;
-    --accent:#86B6F0; --accent-soft:#1D2A3A; --warn:#F2AE5B; --warn-soft:#30261A; --band:#151C25; color-scheme: dark; }
+    --accent:#86B6F0; --accent-soft:#1D2A3A; --warn:#F2AE5B; --warn-soft:#30261A; --band:#151C25; --teal:#5FC9B8; --teal-soft:#14302C; --violet:#B7A2F4; --violet-soft:#251E3B;
+    --chev:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23A2ABB9' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); color-scheme: dark; }
 }
 :root[data-theme="dark"]{ --bg:#10141A; --surface:#181F28; --sunk:#131920; --ink:#E7EBF1; --muted:#A2ABB9; --rule:#2B3440;
-  --accent:#86B6F0; --accent-soft:#1D2A3A; --warn:#F2AE5B; --warn-soft:#30261A; --band:#151C25; color-scheme: dark; }
+  --accent:#86B6F0; --accent-soft:#1D2A3A; --warn:#F2AE5B; --warn-soft:#30261A; --band:#151C25; --teal:#5FC9B8; --teal-soft:#14302C; --violet:#B7A2F4; --violet-soft:#251E3B;
+    --chev:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23A2ABB9' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); color-scheme: dark; }
 
 *{box-sizing:border-box}
 html{scroll-padding-top:calc(60px + env(safe-area-inset-top,0px))}
@@ -52,16 +55,16 @@ nav a:hover{color:var(--ink)}
 .facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--rule);border-radius:10px;background:var(--surface);overflow:hidden}
 .facts div{padding:12px 14px;border-right:1px solid var(--rule)}
 .facts div:last-child{border-right:0}
-.facts b{display:block;font-family:var(--serif);font-size:1.45rem;font-weight:650;line-height:1.15}
+.facts b{display:block;color:var(--accent);font-family:var(--serif);font-size:1.45rem;font-weight:650;line-height:1.15}
 .facts span{font-size:.8rem;color:var(--muted)}
 .notice{margin-top:10px;font-size:.85rem;color:var(--muted);border-left:3px solid var(--warn);padding-left:10px}
 @media (max-width:900px){.hero .wrap{grid-template-columns:1fr;gap:16px}}
 
 /* sections */
 section{padding:28px 0;border-bottom:1px solid var(--rule)}
-.head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+.head{margin-bottom:14px}
 h2{font-family:var(--serif);font-weight:650;font-size:1.45rem;margin:0}
-.head p{margin:0;color:var(--muted);max-width:70ch;font-size:.95rem}
+.head p{margin:4px 0 0;color:var(--muted);max-width:110ch;font-size:.95rem}
 h3{font-family:var(--serif);font-weight:500;font-size:1.08rem;margin:20px 0 8px}
 
 /* try it */
@@ -73,6 +76,8 @@ label{display:block;font-weight:600;font-size:.86rem;margin:10px 0 4px}
 .hint{font-weight:400;color:var(--muted)}
 select,input,textarea{width:100%;font:inherit;font-size:.93rem;color:var(--ink);background:var(--sunk);border:1px solid var(--rule);border-radius:6px;padding:7px 10px}
 textarea{resize:vertical;min-height:96px}
+select{appearance:none;-webkit-appearance:none;background-image:var(--chev);background-repeat:no-repeat;background-position:right 12px center;padding-right:34px;cursor:pointer;line-height:1.4}
+input,select{height:38px}
 .count{font-size:.8rem;color:var(--muted);text-align:right;margin-top:2px}
 .btn{font:inherit;font-weight:600;border:0;border-radius:6px;padding:9px 16px;cursor:pointer;background:var(--accent);color:var(--surface)}
 .btn[disabled]{opacity:.55;cursor:progress}
@@ -92,12 +97,18 @@ textarea{resize:vertical;min-height:96px}
   border-top:1px solid var(--rule);border-right:1px solid var(--rule);transform:translateY(-50%) rotate(45deg);z-index:1}
 .trace .k{font-size:.76rem;color:var(--muted)}
 .trace .v{font-weight:600;font-size:.9rem;overflow-wrap:anywhere}
+.trace .tree .v{color:var(--accent)}
 .trace .s{font-size:.78rem;color:var(--muted);margin-top:2px;overflow-wrap:anywhere}
 @media (max-width:620px){.trace{grid-template-columns:1fr}.trace > div{border-right:0;border-bottom:1px solid var(--rule)}
   .trace > div:last-child{border-bottom:0}.trace > div:not(:last-child)::after{right:auto;left:20px;top:auto;bottom:-7px;transform:rotate(135deg)}}
 .verdict{display:flex;gap:10px;align-items:baseline;margin-bottom:8px;flex-wrap:wrap}
 .badge{display:inline-block;border-radius:999px;padding:1px 10px;font-size:.8rem;font-weight:600;border:1px solid currentColor}
 .ok{color:var(--accent)} .warn{color:var(--warn)}
+.badge.ok{background:var(--accent-soft)} .badge.warn{background:var(--warn-soft)}
+.pill{display:inline-block;font-size:.74rem;font-weight:600;border-radius:999px;padding:1px 8px;white-space:nowrap}
+td > .pill:first-child{display:block;width:fit-content;margin:2px 0 6px}
+.pill.one{background:var(--teal-soft);color:var(--teal)} .pill.many{background:var(--violet-soft);color:var(--violet)}
+.pill.hi{background:var(--warn-soft);color:var(--warn)} .pill.mid{background:var(--violet-soft);color:var(--violet)} .pill.lo{background:var(--teal-soft);color:var(--teal)} .pill.na{background:var(--sunk);color:var(--muted);border:1px solid var(--rule)}
 .two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
 @media (max-width:700px){.two{grid-template-columns:1fr}}
 .checks{list-style:none;padding:0;margin:0}
@@ -108,9 +119,10 @@ textarea{resize:vertical;min-height:96px}
 .cap{font-size:.78rem;color:var(--muted);margin:0 0 2px}
 .tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:12px}
 table{border-collapse:collapse;width:100%;font-size:.87rem}
-th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--rule);vertical-align:top}
+th,td{text-align:left;padding:9px 14px;border-bottom:1px solid var(--rule);vertical-align:top}
 th{font-weight:600;color:var(--muted);font-size:.8rem}
 td.q{font-weight:500}
+.ftable th:nth-child(1){width:26%} .ftable th:nth-child(2){width:26%} .ftable th:nth-child(3){width:22%}
 .clue{font-style:italic;color:var(--muted)}
 .rel{font-size:.78rem}
 .meta{font-size:.8rem;color:var(--muted);margin:8px 0 0}
@@ -124,8 +136,8 @@ details > div{padding:0 12px 12px}
 .steps li{background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:12px 14px;counter-increment:s;font-size:.88rem;color:var(--muted)}
 .steps li b{display:block;color:var(--ink);font-size:.95rem;margin-bottom:2px}
 .steps li b::before{content:counter(s) ". ";color:var(--accent)}
-.steps .tag{display:inline-block;font-size:.74rem;font-weight:600;border-radius:4px;padding:0 6px;margin-left:6px;vertical-align:1px}
-.tag.ai{background:var(--accent-soft);color:var(--accent)} .tag.code{background:var(--sunk);color:var(--muted);border:1px solid var(--rule)}
+.tag{display:inline-block;font-size:.74rem;font-weight:600;border-radius:4px;padding:0 6px;margin-left:6px;vertical-align:1px}
+.tag.ai{background:var(--accent-soft);color:var(--accent)} .tag.code{background:var(--teal-soft);color:var(--teal)}
 @media (max-width:900px){.steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:560px){.steps{grid-template-columns:1fr}}
 
@@ -134,12 +146,12 @@ details > div{padding:0 12px 12px}
 .qcard{background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:12px 14px}
 .qcard .qt{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
 .qcard .qt b{font-size:.93rem}
-.qcard .qt span{font-size:.76rem;color:var(--muted);white-space:nowrap}
+
 .qcard .id{color:var(--accent);font-weight:600;margin-right:4px}
 .opts{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
 .opts span{font-size:.76rem;background:var(--sunk);border:1px solid var(--rule);border-radius:4px;padding:1px 6px}
 .qcard .rel{display:block;margin-top:6px}
-.glabel{grid-column:1/-1;font-family:var(--serif);font-size:1.02rem;margin:8px 0 -2px}
+.glabel{grid-column:1/-1;font-family:var(--serif);font-size:1.02rem;margin:8px 0 -2px;padding-left:10px;border-left:3px solid var(--accent)}
 footer{padding:20px 0 30px;color:var(--muted);font-size:.84rem}
 @media (prefers-reduced-motion:no-preference){ .result-in{animation:fade .3s ease-out} @keyframes fade{from{opacity:0}to{opacity:1}} }
 </style>
@@ -206,7 +218,7 @@ footer{padding:20px 0 30px;color:var(--muted);font-size:.84rem}
 
 <section id="codebook"><div class="wrap">
   <div class="head"><h2>The codebook: 19 questions asked of every item</h2>
-    <p>The AI may only answer with these options, must quote the words behind each answer, and leaves a question out when the text doesn't say. Prompt v1.5. The check under each question is its score on the 20-item hand-labelled golden set.</p></div>
+    <p>The AI may only answer with these options, must quote the words behind each answer, and leaves a question out when the text doesn't say. Prompt v1.5. Each card shows whether a question takes <span class="pill one">one answer</span> or <span class="pill many">several allowed</span>, and its score on the 20-item hand-labelled golden set.</p></div>
   <div class="groups" id="cb"></div>
   <details style="margin-top:14px"><summary>Rules applied after tagging (code, not AI)</summary><div>
     <div class="tablewrap"><table>
@@ -224,7 +236,7 @@ footer{padding:20px 0 30px;color:var(--muted);font-size:.84rem}
 
 <section id="how"><div class="wrap">
   <div class="head"><h2>How the engine works</h2>
-    <p>AI is used only where meaning has to be read (steps 3 and 4). Everything else is fixed code, so it is cheap, repeatable and auditable. A human check closed every step.</p></div>
+    <p><span class="tag ai" style="margin:0">AI</span> is used only where meaning has to be read (steps 3 and 4). <span class="tag code" style="margin:0">code</span> does everything else with fixed rules, so it is cheap, repeatable and auditable. A human check closed every step.</p></div>
   <ol class="steps">
     <li><b>Collect<span class="tag code">code</span></b>Play Store reviews for Groww and 5 competitors since Jan 2023 (about 295,000), App Store reviews, 59,394 comments on 93 finance videos, 9,752 TradingQ&amp;A posts, 1,406 Reddit items. Public data only; no usernames.</li>
     <li><b>Content check<span class="tag code">code</span></b>Removes empty and generic items and labels replies prompted by a creator's call to action. Every exclusion keeps a reason; nothing is deleted.</li>
@@ -237,10 +249,10 @@ footer{padding:20px 0 30px;color:var(--muted);font-size:.84rem}
   <div class="tablewrap"><table>
     <thead><tr><th>Check</th><th>Result</th><th>What it means</th></tr></thead>
     <tbody>
-      <tr><td>Golden set: 20 items labelled by hand (prompt v1.4)</td><td>8 of 11 scoreable questions pass (bar 80% for action and trigger, 70% otherwise)</td><td>Below bar: what they did 44%, worries 67%, feature 45%. These are used only at a coarse level and checked against real quotes. 8 questions had too few examples to score.</td></tr>
-      <tr><td>Fresh blind check of "what they did" (prompt v1.5, 30 new items)</td><td>8 of 30 described an action; 1 of 8 matched</td><td>The action question is genuinely ambiguous; interviews carry the "why".</td></tr>
-      <tr><td>Quote check on 4,000 tagged items</td><td>99.5% of quotes found in the item</td><td>The AI isn't inventing evidence. The live demo runs the same check on every answer.</td></tr>
-      <tr><td>Relevance audit</td><td>Recall about 80%</td><td>Counts are a floor, not a census.</td></tr>
+      <tr><td>Golden set: 20 items labelled by hand (prompt v1.4)</td><td><span class="pill one">8 of 11 pass</span> Bar: 80% for action and trigger, 70% otherwise</td><td>Below bar: what they did 44%, worries 67%, feature 45%. These are used only at a coarse level and checked against real quotes. 8 questions had too few examples to score.</td></tr>
+      <tr><td>Fresh blind check of "what they did" (prompt v1.5, 30 new items)</td><td><span class="pill hi">1 of 8 matched</span> Only 8 of 30 items described an action</td><td>The action question is genuinely ambiguous; interviews carry the "why".</td></tr>
+      <tr><td>Quote check on 4,000 tagged items</td><td><span class="pill one">99.5%</span> Quotes found in the item they came from</td><td>The AI isn't inventing evidence. The live demo runs the same check on every answer.</td></tr>
+      <tr><td>Relevance audit</td><td><span class="pill one">About 80%</span> Recall on a blind audit</td><td>Counts are a floor, not a census.</td></tr>
     </tbody>
   </table></div>
   <p class="meta">Limitations: one person labelled the golden set; App Store collection is incomplete for four competitors; public posts over-represent people with problems; age and income are rarely stated, so segments come from interviews.</p>
@@ -249,14 +261,14 @@ footer{padding:20px 0 30px;color:var(--muted);font-size:.84rem}
 <section id="found"><div class="wrap">
   <div class="head"><h2>Doubt is the most common experience, but cash collisions are what break the SIP</h2>
     <p>Analysis set: 20,146 mutual fund items, 12,257 in investor voice. Frequency is a theme's rank within each source; severity is the share of a theme's items that ended in a lapse or missed instalment.</p></div>
-  <div class="tablewrap"><table>
+  <div class="tablewrap"><table class="ftable">
     <thead><tr><th>Opportunity area</th><th>How often</th><th>How often it ends in a lapse</th><th>Interviews</th></tr></thead>
     <tbody>
-      <tr><td><b>Cash collision</b>: failed debits, mandate or bank issues, unexpected debits</td><td>"Payment failed" top 5 in 9 of 11 sources</td><td>High: 59 to 100% of failed-instalment worries</td><td>3 of 4 had a failed debit; a penalty triggered an urge to cancel</td></tr>
-      <tr><td><b>Doubt</b>: saw losses, thinking of stopping, "am I doing it right"</td><td>"Saw losses" top 5 in 8 of 9; "am I doing it right" first on Reddit and YouTube</td><td>Very low: 0 to 1%</td><td>Opened the pause screen and closed it; never paused</td></tr>
-      <tr><td><b>Trust and operations</b>: money not showing, safety, withdrawal</td><td>Safety and withdrawal top 5 in 10 of 11</td><td>Low to medium: 3 to 14%</td><td>Real gaps, but not what ended SIPs</td></tr>
-      <tr><td><b>Life-event cash need</b></td><td>Low in public data</td><td>Hard to measure</td><td>Behind both actual pauses</td></tr>
-      <tr><td><b>App technical issues</b> (scoped out: engineering backlog)</td><td>Top trigger in 10 of 11 sources</td><td>Medium: 12%</td><td>Not raised</td></tr>
+      <tr><td><b>Cash collision</b>: failed debits, mandate or bank issues, unexpected debits</td><td>"Payment failed" top 5 in 9 of 11 sources</td><td><span class="pill hi">High</span> 59 to 100% of failed-instalment worries</td><td>3 of 4 had a failed debit; a penalty triggered an urge to cancel</td></tr>
+      <tr><td><b>Doubt</b>: saw losses, thinking of stopping, "am I doing it right"</td><td>"Saw losses" top 5 in 8 of 9; "am I doing it right" first on Reddit and YouTube</td><td><span class="pill lo">Very low</span> 0 to 1%</td><td>Opened the pause screen and closed it; never paused</td></tr>
+      <tr><td><b>Trust and operations</b>: money not showing, safety, withdrawal</td><td>Safety and withdrawal top 5 in 10 of 11</td><td><span class="pill mid">Low to medium</span> 3 to 14%</td><td>Real gaps, but not what ended SIPs</td></tr>
+      <tr><td><b>Life-event cash need</b></td><td>Low in public data</td><td><span class="pill na">Hard to measure</span></td><td>Behind both actual pauses</td></tr>
+      <tr><td><b>App technical issues</b> (scoped out: engineering backlog)</td><td>Top trigger in 10 of 11 sources</td><td><span class="pill mid">Medium</span> 12%</td><td>Not raised</td></tr>
     </tbody>
   </table></div>
   <p class="meta" style="font-size:.9rem;color:var(--ink)">Target chosen: the first tight month in a young salaried first-timer's first year, when the SIP date collides with a cash shortfall. The engine shows it is common and severe; interviews showed why: the break is temporary and cash-driven, yet it counts as a lapse.</p>
@@ -888,7 +900,7 @@ function renderCodebook() {
     h += '<div class="glabel">' + esc(g) + '</div>';
     fields.forEach(f => {
       const c = CODEBOOK[f];
-      h += '<div class="qcard"><div class="qt"><b><span class="id">' + esc(f.replace('_',' ')) + '</span>' + esc(QUESTION[f]) + '</b><span>' + (c.type === 'one' ? 'one answer' : 'several allowed') + '</span></div>'
+      h += '<div class="qcard"><div class="qt"><b><span class="id">' + esc(f.replace('_',' ')) + '</span>' + esc(QUESTION[f]) + '</b>' + (c.type === 'one' ? '<span class="pill one">one answer</span>' : '<span class="pill many">several allowed</span>') + '</div>'
         + '<div class="opts">' + c.options.map(o => '<span>' + esc(o) + '</span>').join('') + '</div>' + relBadge(f) + '</div>';
     });
   });
@@ -903,7 +915,7 @@ function renderResult(r, opts) {
   h += '<div class="trace" aria-label="How this item feeds the metric">'
     + '<div><div class="k">Scope</div><div class="v">' + esc(d.scope[0]) + '</div><div class="s">' + esc(d.scope[1]) + '</div></div>'
     + '<div><div class="k">Voice</div><div class="v">' + esc(d.lane) + '</div><div class="s">' + esc(vals(r.tags,'S4')[0] || 'Not clear') + '</div></div>'
-    + '<div><div class="k">Metric tree</div><div class="v">' + esc(d.path) + '</div>' + (d.flag ? '<div class="s">' + esc(d.flag) + '</div>' : '') + '</div>'
+    + '<div class="tree"><div class="k">Metric tree</div><div class="v">' + esc(d.path) + '</div>' + (d.flag ? '<div class="s">' + esc(d.flag) + '</div>' : '') + '</div>'
     + '<div><div class="k">Findings view</div><div class="v">' + (d.tier ? 'Tier ' + esc(TIER_NAME[d.tier]) : 'No severity tier') + '</div><div class="s">Path: ' + esc(d.paths.length ? d.paths.join(', ') : 'none') + '</div></div>'
     + '</div>';
   h += '<div class="two"><div><p class="cap">What the AI read</p><div class="ctx">' + esc(r.context) + '</div></div>';
