@@ -8,196 +8,262 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,500;8..60,650&display=swap" rel="stylesheet">
+<script>
+  // Apply the saved theme before the page paints, so there is no flash
+  try { const t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (e) {}
+</script>
 <style>
 :root{
-  --bg:#F4F6F8; --surface:#FFFFFF; --ink:#172033; --muted:#556073; --rule:#D7DDE5;
-  --accent:#1D5FA8; --accent-soft:#E6EEF8; --warn:#9A5600; --warn-soft:#FBF0E1;
+  --bg:#F3F5F8; --surface:#FFFFFF; --sunk:#EEF1F5; --ink:#162033; --muted:#566175; --rule:#D8DEE6;
+  --accent:#1D5FA8; --accent-soft:#E5EEF9; --warn:#975400; --warn-soft:#FBF0E0; --band:#E9EFF7;
   --serif:"Source Serif 4", Georgia, "Times New Roman", serif;
   --sans:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark){
-  :root{ --bg:#11151B; --surface:#192029; --ink:#E7EBF1; --muted:#A3ACBA; --rule:#2D3541;
-    --accent:#86B6F0; --accent-soft:#1E2B3B; --warn:#F2AE5B; --warn-soft:#33281A; color-scheme: dark; }
+  :root:not([data-theme="light"]){ --bg:#10141A; --surface:#181F28; --sunk:#131920; --ink:#E7EBF1; --muted:#A2ABB9; --rule:#2B3440;
+    --accent:#86B6F0; --accent-soft:#1D2A3A; --warn:#F2AE5B; --warn-soft:#30261A; --band:#151C25; color-scheme: dark; }
 }
+:root[data-theme="dark"]{ --bg:#10141A; --surface:#181F28; --sunk:#131920; --ink:#E7EBF1; --muted:#A2ABB9; --rule:#2B3440;
+  --accent:#86B6F0; --accent-soft:#1D2A3A; --warn:#F2AE5B; --warn-soft:#30261A; --band:#151C25; color-scheme: dark; }
+
 *{box-sizing:border-box}
-html{scroll-padding-top:calc(64px + env(safe-area-inset-top,0px))}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.55;
+html{scroll-padding-top:calc(60px + env(safe-area-inset-top,0px))}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15.5px;line-height:1.5;
   padding-bottom:env(safe-area-inset-bottom,0px)}
 a{color:var(--accent)}
 :focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
-header.top{position:sticky;top:0;z-index:5;background:var(--surface);border-bottom:1px solid var(--rule);
-  padding-top:env(safe-area-inset-top,0px)}
-header.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:56px;flex-wrap:wrap}
-.brand{font-family:var(--serif);font-weight:650;font-size:1.05rem}
-nav a{margin-left:18px;text-decoration:none;color:var(--muted);font-weight:500}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+
+/* header */
+header.top{position:sticky;top:0;z-index:5;background:var(--surface);border-bottom:1px solid var(--rule);padding-top:env(safe-area-inset-top,0px)}
+header.top .wrap{display:flex;align-items:center;gap:20px;min-height:52px;flex-wrap:wrap}
+.brand{font-family:var(--serif);font-weight:650;font-size:1.05rem;margin-right:auto}
+nav{display:flex;gap:18px;flex-wrap:wrap}
+nav a{text-decoration:none;color:var(--muted);font-weight:500;font-size:.95rem}
 nav a:hover{color:var(--ink)}
-.hero{padding:56px 0 28px}
-.hero h1{font-family:var(--serif);font-weight:650;font-size:clamp(2rem,4.6vw,3.1rem);line-height:1.12;margin:0 0 16px;max-width:20ch}
-.hero p{max-width:62ch;color:var(--muted);font-size:1.08rem;margin:0 0 12px}
-.notice{border-left:3px solid var(--warn);background:var(--warn-soft);padding:10px 14px;max-width:70ch;font-size:.95rem;margin-top:18px}
-section{padding:36px 0;border-top:1px solid var(--rule)}
-h2{font-family:var(--serif);font-weight:650;font-size:1.7rem;margin:0 0 8px}
-h3{font-family:var(--serif);font-weight:500;font-size:1.2rem;margin:28px 0 8px}
-.lede{color:var(--muted);max-width:66ch;margin:0 0 22px}
-.grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:28px;align-items:start}
-@media (max-width:860px){.grid{grid-template-columns:minmax(0,1fr)}}
-@media (max-width:620px){td.q{white-space:normal}}
-.panel{min-width:0;background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:20px}
-label{display:block;font-weight:600;font-size:.92rem;margin:14px 0 6px}
-label:first-child{margin-top:0}
+.theme{font:inherit;font-size:.88rem;font-weight:500;color:var(--ink);background:var(--sunk);border:1px solid var(--rule);border-radius:999px;padding:4px 12px;cursor:pointer}
+
+/* hero: headline and the key numbers side by side */
+.hero{background:var(--band);border-bottom:1px solid var(--rule)}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:32px;padding-top:28px;padding-bottom:26px;align-items:center}
+.hero h1{font-family:var(--serif);font-weight:650;font-size:clamp(1.7rem,3vw,2.35rem);line-height:1.15;margin:0 0 10px}
+.hero p{color:var(--muted);margin:0 0 8px;max-width:64ch}
+.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--rule);border-radius:10px;background:var(--surface);overflow:hidden}
+.facts div{padding:12px 14px;border-right:1px solid var(--rule)}
+.facts div:last-child{border-right:0}
+.facts b{display:block;font-family:var(--serif);font-size:1.45rem;font-weight:650;line-height:1.15}
+.facts span{font-size:.8rem;color:var(--muted)}
+.notice{margin-top:10px;font-size:.85rem;color:var(--muted);border-left:3px solid var(--warn);padding-left:10px}
+@media (max-width:900px){.hero .wrap{grid-template-columns:1fr;gap:16px}}
+
+/* sections */
+section{padding:28px 0;border-bottom:1px solid var(--rule)}
+.head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+h2{font-family:var(--serif);font-weight:650;font-size:1.45rem;margin:0}
+.head p{margin:0;color:var(--muted);max-width:70ch;font-size:.95rem}
+h3{font-family:var(--serif);font-weight:500;font-size:1.08rem;margin:20px 0 8px}
+
+/* try it */
+.grid{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,7fr);gap:20px;align-items:start}
+@media (max-width:900px){.grid{grid-template-columns:minmax(0,1fr)}}
+.panel{min-width:0;background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:16px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+label{display:block;font-weight:600;font-size:.86rem;margin:10px 0 4px}
 .hint{font-weight:400;color:var(--muted)}
-select,input,textarea{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--rule);border-radius:6px;padding:9px 11px}
-textarea{resize:vertical;min-height:120px}
-.count{font-size:.85rem;color:var(--muted);text-align:right;margin-top:4px}
-.btn{display:inline-block;font:inherit;font-weight:600;border:0;border-radius:6px;padding:11px 18px;cursor:pointer;background:var(--accent);color:var(--surface)}
+select,input,textarea{width:100%;font:inherit;font-size:.93rem;color:var(--ink);background:var(--sunk);border:1px solid var(--rule);border-radius:6px;padding:7px 10px}
+textarea{resize:vertical;min-height:96px}
+.count{font-size:.8rem;color:var(--muted);text-align:right;margin-top:2px}
+.btn{font:inherit;font-weight:600;border:0;border-radius:6px;padding:9px 16px;cursor:pointer;background:var(--accent);color:var(--surface)}
 .btn[disabled]{opacity:.55;cursor:progress}
-.btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent);padding:6px 12px;font-weight:500;font-size:.9rem}
-.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:16px}
-.small{font-size:.88rem;color:var(--muted)}
-.samples{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
-.empty{color:var(--muted);padding:28px 8px;text-align:center}
-/* the trace: text to tags to metric to findings */
-.trace{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;margin:6px 0 18px;border:1px solid var(--rule);border-radius:10px;overflow:hidden}
-.trace > div{padding:12px 14px;border-right:1px solid var(--rule);position:relative;min-width:0}
+.chip{font:inherit;font-size:.82rem;font-weight:500;color:var(--accent);background:var(--accent-soft);border:1px solid transparent;border-radius:999px;padding:4px 10px;cursor:pointer;text-align:left}
+.chip:hover{border-color:var(--accent)}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.small{font-size:.83rem;color:var(--muted)}
+.samples{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.empty{color:var(--muted);padding:40px 12px;text-align:center}
+.empty b{display:block;color:var(--ink);font-family:var(--serif);font-size:1.1rem;margin-bottom:4px}
+
+/* the trace: text to scope to voice to metric tree to findings */
+.trace{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin:4px 0 14px;border:1px solid var(--rule);border-radius:10px;overflow:hidden;background:var(--sunk)}
+.trace > div{padding:10px 12px;border-right:1px solid var(--rule);position:relative;min-width:0}
 .trace > div:last-child{border-right:0}
-.trace > div:not(:last-child)::after{content:"";position:absolute;right:-7px;top:50%;width:12px;height:12px;background:var(--surface);
+.trace > div:not(:last-child)::after{content:"";position:absolute;right:-7px;top:50%;width:12px;height:12px;background:var(--sunk);
   border-top:1px solid var(--rule);border-right:1px solid var(--rule);transform:translateY(-50%) rotate(45deg);z-index:1}
-.trace .k{font-size:.8rem;color:var(--muted);margin-bottom:4px}
-.trace .v{font-weight:600;font-size:.95rem;overflow-wrap:anywhere}
-.trace .s{font-size:.82rem;color:var(--muted);margin-top:4px;overflow-wrap:anywhere}
+.trace .k{font-size:.76rem;color:var(--muted)}
+.trace .v{font-weight:600;font-size:.9rem;overflow-wrap:anywhere}
+.trace .s{font-size:.78rem;color:var(--muted);margin-top:2px;overflow-wrap:anywhere}
 @media (max-width:620px){.trace{grid-template-columns:1fr}.trace > div{border-right:0;border-bottom:1px solid var(--rule)}
-  .trace > div:last-child{border-bottom:0}.trace > div:not(:last-child)::after{right:auto;left:22px;top:auto;bottom:-7px;transform:rotate(135deg)}}
-.verdict{display:flex;gap:10px;align-items:baseline;margin-bottom:12px;flex-wrap:wrap}
-.badge{display:inline-block;border-radius:999px;padding:2px 10px;font-size:.82rem;font-weight:600;border:1px solid currentColor}
+  .trace > div:last-child{border-bottom:0}.trace > div:not(:last-child)::after{right:auto;left:20px;top:auto;bottom:-7px;transform:rotate(135deg)}}
+.verdict{display:flex;gap:10px;align-items:baseline;margin-bottom:8px;flex-wrap:wrap}
+.badge{display:inline-block;border-radius:999px;padding:1px 10px;font-size:.8rem;font-weight:600;border:1px solid currentColor}
 .ok{color:var(--accent)} .warn{color:var(--warn)}
-.checks{list-style:none;padding:0;margin:0 0 18px}
-.checks li{display:grid;grid-template-columns:22px 1fr;gap:6px;padding:5px 0;font-size:.93rem}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+@media (max-width:700px){.two{grid-template-columns:1fr}}
+.checks{list-style:none;padding:0;margin:0}
+.checks li{display:grid;grid-template-columns:18px 1fr;gap:4px;padding:2px 0;font-size:.86rem}
 .checks .ic{font-weight:700}
-.checks .d{grid-column:2;color:var(--muted);font-size:.85rem}
-.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
-table{border-collapse:collapse;width:100%;font-size:.92rem}
-th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
-th{font-weight:600;color:var(--muted);font-size:.85rem}
-td.q{white-space:nowrap;font-weight:500}
+.checks .d{grid-column:2;color:var(--muted);font-size:.8rem}
+.ctx{white-space:pre-wrap;background:var(--sunk);border:1px solid var(--rule);border-radius:6px;padding:8px 10px;font-size:.86rem;margin:4px 0 0;overflow-wrap:anywhere;max-height:150px;overflow:auto}
+.cap{font-size:.78rem;color:var(--muted);margin:0 0 2px}
+.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:12px}
+table{border-collapse:collapse;width:100%;font-size:.87rem}
+th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-weight:600;color:var(--muted);font-size:.8rem}
+td.q{font-weight:500}
 .clue{font-style:italic;color:var(--muted)}
-.rel{font-size:.8rem}
-.ctx{white-space:pre-wrap;background:var(--bg);border:1px solid var(--rule);border-radius:6px;padding:10px 12px;font-size:.9rem;margin:8px 0 14px;overflow-wrap:anywhere}
-.fallback{border:1px solid var(--warn);background:var(--warn-soft);border-radius:8px;padding:12px 14px;margin-bottom:14px}
-details{border:1px solid var(--rule);border-radius:8px;margin:10px 0;background:var(--surface)}
-summary{cursor:pointer;padding:10px 14px;font-weight:600}
-details > div{padding:0 14px 14px}
-ol.steps{padding-left:1.4em;max-width:76ch}
-ol.steps li{margin:0 0 14px}
-ol.steps b{font-weight:600}
-.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
-.stat{border-top:2px solid var(--ink);padding-top:8px}
-.stat .n{font-family:var(--serif);font-size:1.9rem;font-weight:650;line-height:1.1}
-.stat .l{color:var(--muted);font-size:.92rem}
-.meta{font-size:.82rem;color:var(--muted);margin-top:12px}
-footer{border-top:1px solid var(--rule);padding:28px 0 40px;color:var(--muted);font-size:.9rem}
-@media (prefers-reduced-motion:no-preference){ .result-in{animation:fade .35s ease-out} @keyframes fade{from{opacity:0}to{opacity:1}} }
+.rel{font-size:.78rem}
+.meta{font-size:.8rem;color:var(--muted);margin:8px 0 0}
+.fallback{border:1px solid var(--warn);background:var(--warn-soft);border-radius:8px;padding:10px 12px;margin-bottom:10px;font-size:.92rem}
+details{border:1px solid var(--rule);border-radius:8px;margin:8px 0;background:var(--surface)}
+summary{cursor:pointer;padding:8px 12px;font-weight:600;font-size:.93rem}
+details > div{padding:0 12px 12px}
+
+/* how it works */
+.steps{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;counter-reset:s}
+.steps li{background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:12px 14px;counter-increment:s;font-size:.88rem;color:var(--muted)}
+.steps li b{display:block;color:var(--ink);font-size:.95rem;margin-bottom:2px}
+.steps li b::before{content:counter(s) ". ";color:var(--accent)}
+.steps .tag{display:inline-block;font-size:.74rem;font-weight:600;border-radius:4px;padding:0 6px;margin-left:6px;vertical-align:1px}
+.tag.ai{background:var(--accent-soft);color:var(--accent)} .tag.code{background:var(--sunk);color:var(--muted);border:1px solid var(--rule)}
+@media (max-width:900px){.steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.steps{grid-template-columns:1fr}}
+
+/* codebook */
+.groups{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px}
+.qcard{background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:12px 14px}
+.qcard .qt{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.qcard .qt b{font-size:.93rem}
+.qcard .qt span{font-size:.76rem;color:var(--muted);white-space:nowrap}
+.qcard .id{color:var(--accent);font-weight:600;margin-right:4px}
+.opts{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.opts span{font-size:.76rem;background:var(--sunk);border:1px solid var(--rule);border-radius:4px;padding:1px 6px}
+.qcard .rel{display:block;margin-top:6px}
+.glabel{grid-column:1/-1;font-family:var(--serif);font-size:1.02rem;margin:8px 0 -2px}
+footer{padding:20px 0 30px;color:var(--muted);font-size:.84rem}
+@media (prefers-reduced-motion:no-preference){ .result-in{animation:fade .3s ease-out} @keyframes fade{from{opacity:0}to{opacity:1}} }
 </style>
 </head>
 <body>
 <header class="top"><div class="wrap">
   <div class="brand">SIP Discovery Engine</div>
-  <nav aria-label="Sections"><a href="#try">Try it</a><a href="#how">How it works</a><a href="#found">What it found</a></nav>
+  <nav aria-label="Sections"><a href="#try">Try it</a><a href="#codebook">Codebook</a><a href="#how">How it works</a><a href="#found">Findings</a></nav>
+  <button class="theme" id="theme" type="button" aria-label="Switch colour theme">Dark mode</button>
 </div></header>
 
 <main>
-<div class="wrap hero">
-  <h1>What makes first-time investors stop their SIP?</h1>
-  <p>This engine read 38,963 public conversations about SIPs and mutual funds (app reviews, YouTube comments, Reddit and TradingQ&amp;A) and tagged each one against a fixed codebook of 19 questions. The tags were then linked to the metric: the share of first-time investors with an active SIP 12 months after starting.</p>
-  <p>Paste any review or comment below to run the same tagging step live, with the same prompt and model, and see the quality checks and how the result feeds the metric.</p>
-  <div class="notice">A research prototype for a product case study, built on Groww. It describes what people say; it is not investment advice and does not recommend any fund. Not affiliated with Groww.</div>
-</div>
+<div class="hero"><div class="wrap">
+  <div>
+    <h1>What makes first-time investors stop their SIP?</h1>
+    <p>This engine read public conversations about SIPs (app reviews, YouTube comments, Reddit and TradingQ&amp;A) and tagged each one against a <a href="#codebook">fixed codebook of 19 questions</a>, then linked the tags to the metric: the share of first-time investors with an active SIP 12 months after starting.</p>
+    <p>Paste any comment below to run the same tagging step live, with the same prompt and model.</p>
+  </div>
+  <div>
+    <div class="facts">
+      <div><b>367,555</b><span>public items collected</span></div>
+      <div><b>38,963</b><span>tagged by AI against the codebook</span></div>
+      <div><b>$14.72</b><span>total AI cost of the full run</span></div>
+    </div>
+    <div class="notice">Research prototype for a product case study on Groww. It describes what people say; it is not investment advice and recommends no fund. Not affiliated with Groww.</div>
+  </div>
+</div></div>
 
 <section id="try"><div class="wrap">
-  <h2>Try it on any comment</h2>
-  <p class="lede">Choose where the text comes from, paste it, and tag it. Or load one of the real items from the dataset. In the full pipeline, a relevance step first filters out anything not about SIPs; this demo runs the tagging step and the code that follows it.</p>
+  <div class="head"><h2>Try it on any comment</h2>
+    <p>The full pipeline first filters out anything not about SIPs; this demo runs the tagging step and the rules that follow it.</p></div>
   <div class="grid">
     <div class="panel">
       <form id="f" novalidate>
-        <label for="src">Where is the text from?</label>
-        <select id="src">
-          <option value="app_review">App review</option>
-          <option value="youtube">YouTube comment</option>
-          <option value="reddit_post">Reddit post</option>
-          <option value="reddit_comment">Reddit comment</option>
-          <option value="forum_question">Forum question (TradingQ&amp;A)</option>
-          <option value="forum_reply">Forum reply (TradingQ&amp;A)</option>
-        </select>
-        <div id="appBox"><label for="app">Which app?</label>
-          <select id="app"><option>Groww</option><option>INDmoney</option><option>Zerodha Coin</option><option>ET Money</option><option>Paytm Money</option><option>Kuvera</option></select></div>
-        <div id="titleBox" hidden><label for="title"><span id="titleLabel">Video title</span> <span class="hint">(optional)</span></label>
-          <input id="title" maxlength="300"></div>
-        <div id="parentBox" hidden><label for="parent">Replying to <span class="hint">(optional, the comment above it)</span></label>
-          <textarea id="parent" maxlength="600" style="min-height:70px"></textarea></div>
+        <div class="form-row">
+          <div><label for="src">Where is it from?</label>
+            <select id="src">
+              <option value="app_review">App review</option>
+              <option value="youtube">YouTube comment</option>
+              <option value="reddit_post">Reddit post</option>
+              <option value="reddit_comment">Reddit comment</option>
+              <option value="forum_question">Forum question</option>
+              <option value="forum_reply">Forum reply</option>
+            </select></div>
+          <div id="appBox"><label for="app">Which app?</label>
+            <select id="app"><option>Groww</option><option>INDmoney</option><option>Zerodha Coin</option><option>ET Money</option><option>Paytm Money</option><option>Kuvera</option></select></div>
+          <div id="titleBox" hidden><label for="title"><span id="titleLabel">Video title</span> <span class="hint">(optional)</span></label>
+            <input id="title" maxlength="300"></div>
+        </div>
+        <div id="parentBox" hidden><label for="parent">Replying to <span class="hint">(optional)</span></label>
+          <textarea id="parent" maxlength="600" style="min-height:56px"></textarea></div>
         <label for="text">Text to tag</label>
         <textarea id="text" maxlength="1500" placeholder="For example: My SIP failed this month because my salary came late. Will Groww cancel it?"></textarea>
         <div class="count"><span id="cnt">0</span> / 1,500</div>
-        <p class="small">English, Hindi, Marathi or Hinglish. Please don't paste names, phone numbers or account details. Nothing you paste is stored.</p>
         <div class="row"><button class="btn" id="go" type="submit">Tag this text</button><span class="small" id="status" role="status" aria-live="polite"></span></div>
+        <p class="small" style="margin:8px 0 0">English, Hindi, Marathi or Hinglish. Don't paste names, phone numbers or account details. Nothing you paste is stored.</p>
       </form>
-      <h3>Load a real item from the dataset</h3>
+      <label style="margin-top:14px">Or load a real item from the dataset</label>
       <div class="samples" id="samples"></div>
     </div>
-    <div class="panel" id="out" aria-live="polite"><div class="empty">Tags, quality checks and the link to the metric will appear here.</div></div>
+    <div class="panel" id="out" aria-live="polite"><div class="empty"><b>Results appear here</b>The tags, the words behind each one, six quality checks, and where the comment sits in the metric tree.</div></div>
   </div>
 </div></section>
 
+<section id="codebook"><div class="wrap">
+  <div class="head"><h2>The codebook: 19 questions asked of every item</h2>
+    <p>The AI may only answer with these options, must quote the words behind each answer, and leaves a question out when the text doesn't say. Prompt v1.5. The check under each question is its score on the 20-item hand-labelled golden set.</p></div>
+  <div class="groups" id="cb"></div>
+  <details style="margin-top:14px"><summary>Rules applied after tagging (code, not AI)</summary><div>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Layer</th><th>Rule</th></tr></thead>
+      <tbody>
+        <tr><td class="q">Scope</td><td>Mutual fund SIP when "Kind of SIP" is MF explicit or MF inferred. Stock, ETF or gold SIPs are kept separate; unclear items stay out of the main counts.</td></tr>
+        <tr><td class="q">Voice</td><td>Investor voice when it is their own experience or someone they know; observer voice for claims about people in general. Main counts use investor voice.</td></tr>
+        <tr><td class="q">Metric tree</td><td>From "What they did" (and the trigger for cancels and failed payments): Still continuing, increased, reduced or changed date → Never lapsed. Skipped → Lapsed → Chose to lapse → Skip. Cancelled or moved app → Lapsed → Chose to lapse → Cancel → trigger group. Stopped (method unclear) → Lapsed → Chose to lapse → Method unclear. Payment failed → Lapsed → Payment failed → system trigger. Auto-cancelled maps by what came with it. Resumed after a gap → Lapsed and returned. Considering stopping → outside the tree: at risk. Withdrew money adds a guardrail flag.</td></tr>
+        <tr><td class="q">Severity tier</td><td>1 Lapsed (cancelled, stopped, auto-cancelled, moved app); 2 Missed (skipped, payment failed); 3 Reduced or withdrew; 4 Considering stopping; 5 Worried, no action. An item takes its most severe tier.</td></tr>
+        <tr><td class="q">Path</td><td>Cash (failed payments, mandate issues, needing money, wanting to pause or change), Doubt (losses, low returns, considering stopping, "am I doing it right"), Trust and operations (money not showing, safety, withdrawal, charges, app issues).</td></tr>
+      </tbody>
+    </table></div>
+  </div></details>
+</div></section>
+
 <section id="how"><div class="wrap">
-  <h2>How the engine works</h2>
-  <p class="lede">Six steps, run in Google Colab on the full corpus, with a human checkpoint at each one. AI is used only where reading meaning is needed (steps 3 and 4); everything else is fixed code, so it is cheap, repeatable and auditable.</p>
-  <div class="cols">
-    <div class="stat"><div class="n">367,555</div><div class="l">public items collected from 5 source types</div></div>
-    <div class="stat"><div class="n">38,963</div><div class="l">items tagged: 35,796 relevant plus 3,167 uncertain</div></div>
-    <div class="stat"><div class="n">$14.72</div><div class="l">total AI cost (relevance $6.58, tagging $8.14), under the $20 budget</div></div>
-  </div>
-  <h3>The steps</h3>
+  <div class="head"><h2>How the engine works</h2>
+    <p>AI is used only where meaning has to be read (steps 3 and 4). Everything else is fixed code, so it is cheap, repeatable and auditable. A human check closed every step.</p></div>
   <ol class="steps">
-    <li><b>Collect.</b> Play Store reviews for Groww and 5 competitors from 1 Jan 2023 (about 295,000), App Store reviews, 59,394 comments from 93 personal finance videos, 9,752 TradingQ&amp;A posts and 1,406 Reddit items. Public data only; usernames are never used. X and Instagram were skipped (paid access and platform terms).</li>
-    <li><b>Content check (code).</b> Removes empty and generic items, and labels replies prompted by a creator's call to action. Excluded items keep a reason; nothing is deleted.</li>
-    <li><b>Relevance (AI, Claude Haiku 5.5).</b> Five models were tested on 100 hand-labelled items; Haiku won on recall within budget. A blind audit afterwards put recall at about 80% (range 67 to 91%).</li>
-    <li><b>Tag with the codebook (AI).</b> 19 fixed questions: kind of SIP, first-time or not, why they started, what they expected, what they did, what triggered it, what worried them, what they check, where they go for help, what they wish for, and segment signals. The AI must pick from fixed options and quote the words behind every tag. Prompt v1.5, refined five times on a practice set.</li>
-    <li><b>Derive (code).</b> Fixed rules turn tags into the metric view: scope (mutual fund SIP or not), whose experience it is, where it sits in the metric tree, a severity tier and an opportunity path.</li>
-    <li><b>Quantify and rank (code plus judgement).</b> Shares are counted per source, never pooled. Opportunities pass four gates, then sit on a frequency by severity grid. Findings were then tested in 4 user interviews.</li>
+    <li><b>Collect<span class="tag code">code</span></b>Play Store reviews for Groww and 5 competitors since Jan 2023 (about 295,000), App Store reviews, 59,394 comments on 93 finance videos, 9,752 TradingQ&amp;A posts, 1,406 Reddit items. Public data only; no usernames.</li>
+    <li><b>Content check<span class="tag code">code</span></b>Removes empty and generic items and labels replies prompted by a creator's call to action. Every exclusion keeps a reason; nothing is deleted.</li>
+    <li><b>Relevance<span class="tag ai">AI</span></b>Five models tested on 100 hand-labelled items; Claude Haiku 5.5 won on recall within budget. Blind audit: recall about 80%. Result: 35,796 relevant plus 3,167 uncertain.</li>
+    <li><b>Tag with the codebook<span class="tag ai">AI</span></b>19 questions with fixed options and a quoted clue for every answer. Prompt refined five times on a practice set, never on the golden set. Cost $8.14 for 38,963 items.</li>
+    <li><b>Derive<span class="tag code">code</span></b>Fixed rules add scope, voice, metric tree position, severity tier and path, as shown in the codebook section.</li>
+    <li><b>Quantify and rank<span class="tag code">code + judgement</span></b>Shares per source, never pooled. Opportunities pass four gates, then sit on a frequency by severity grid. Tested in user interviews.</li>
   </ol>
   <h3>How quality was checked</h3>
   <div class="tablewrap"><table>
     <thead><tr><th>Check</th><th>Result</th><th>What it means</th></tr></thead>
     <tbody>
-      <tr><td>Golden set: 20 items labelled by hand, scored against the AI (prompt v1.4, before the final run)</td><td>8 of 11 scoreable questions pass the bar (80% for action and trigger, 70% for the rest)</td><td>Pass: kind of SIP 100%, first-time 100%, journey stage 80%, trigger 80%, what they check 75%, where they go 78%, other app 100%, whose experience 100%. Below: action 44%, worries 67%, feature 45%. Eight questions had too few examples to score.</td></tr>
-      <tr><td>Fresh blind check of the action question (prompt v1.5, 30 new items)</td><td>Only 8 of 30 items described an action; 1 of 8 matched</td><td>The action question is used only at a coarse level, and every key finding was checked against real quotes and interviews.</td></tr>
-      <tr><td>Quote check on 4,000 tagged items</td><td>99.5% of quoted words were found in the item</td><td>The AI is not inventing evidence. The live demo runs the same check on every result.</td></tr>
-      <tr><td>Relevance audit</td><td>Recall about 80%</td><td>Some relevant items were missed, so counts are a floor, not a census.</td></tr>
+      <tr><td>Golden set: 20 items labelled by hand (prompt v1.4)</td><td>8 of 11 scoreable questions pass (bar 80% for action and trigger, 70% otherwise)</td><td>Below bar: what they did 44%, worries 67%, feature 45%. These are used only at a coarse level and checked against real quotes. 8 questions had too few examples to score.</td></tr>
+      <tr><td>Fresh blind check of "what they did" (prompt v1.5, 30 new items)</td><td>8 of 30 described an action; 1 of 8 matched</td><td>The action question is genuinely ambiguous; interviews carry the "why".</td></tr>
+      <tr><td>Quote check on 4,000 tagged items</td><td>99.5% of quotes found in the item</td><td>The AI isn't inventing evidence. The live demo runs the same check on every answer.</td></tr>
+      <tr><td>Relevance audit</td><td>Recall about 80%</td><td>Counts are a floor, not a census.</td></tr>
     </tbody>
   </table></div>
-  <p class="meta">Limitations: the golden set was labelled by one person; App Store collection was incomplete for four competitors; public posts over-represent people with problems; segment signals (age, income) are rarely stated, so segments come from interviews.</p>
+  <p class="meta">Limitations: one person labelled the golden set; App Store collection is incomplete for four competitors; public posts over-represent people with problems; age and income are rarely stated, so segments come from interviews.</p>
 </div></section>
 
 <section id="found"><div class="wrap">
-  <h2>Doubt is the most common experience, but cash collisions are what break the SIP</h2>
-  <p class="lede">Read on the analysis set: 20,146 mutual fund items, of which 12,257 describe the writer's own experience or someone they know. Frequency is a theme's rank within each source; severity is the share of that theme's items that ended in a lapse or a missed instalment.</p>
+  <div class="head"><h2>Doubt is the most common experience, but cash collisions are what break the SIP</h2>
+    <p>Analysis set: 20,146 mutual fund items, 12,257 in investor voice. Frequency is a theme's rank within each source; severity is the share of a theme's items that ended in a lapse or missed instalment.</p></div>
   <div class="tablewrap"><table>
     <thead><tr><th>Opportunity area</th><th>How often</th><th>How often it ends in a lapse</th><th>Interviews</th></tr></thead>
     <tbody>
-      <tr><td><b>Cash collision</b>: failed debits, mandate or bank issues, unexpected debits</td><td>"Payment failed" in the top 5 in 9 of 11 sources</td><td>High: 59 to 100% of failed-instalment worries</td><td>3 of 4 had a failed debit; a penalty triggered an urge to cancel</td></tr>
-      <tr><td><b>Doubt</b>: saw losses, thinking of stopping, "am I doing it right"</td><td>"Saw losses" top 5 in 8 of 9; "am I doing it right" first on Reddit and YouTube</td><td>Very low: 0 to 1%</td><td>Doubt led to opening the pause screen and closing it, never to a pause</td></tr>
-      <tr><td><b>Trust and operations</b>: money not showing, safety, withdrawal</td><td>Safety and withdrawal top 5 in 10 of 11</td><td>Low to medium: 3 to 14%</td><td>Concrete gaps, but not what ended SIPs</td></tr>
+      <tr><td><b>Cash collision</b>: failed debits, mandate or bank issues, unexpected debits</td><td>"Payment failed" top 5 in 9 of 11 sources</td><td>High: 59 to 100% of failed-instalment worries</td><td>3 of 4 had a failed debit; a penalty triggered an urge to cancel</td></tr>
+      <tr><td><b>Doubt</b>: saw losses, thinking of stopping, "am I doing it right"</td><td>"Saw losses" top 5 in 8 of 9; "am I doing it right" first on Reddit and YouTube</td><td>Very low: 0 to 1%</td><td>Opened the pause screen and closed it; never paused</td></tr>
+      <tr><td><b>Trust and operations</b>: money not showing, safety, withdrawal</td><td>Safety and withdrawal top 5 in 10 of 11</td><td>Low to medium: 3 to 14%</td><td>Real gaps, but not what ended SIPs</td></tr>
       <tr><td><b>Life-event cash need</b></td><td>Low in public data</td><td>Hard to measure</td><td>Behind both actual pauses</td></tr>
-      <tr><td><b>App technical issues</b> (scoped out: an engineering backlog item)</td><td>The top trigger in 10 of 11 sources</td><td>Medium: 12%</td><td>Not raised</td></tr>
+      <tr><td><b>App technical issues</b> (scoped out: engineering backlog)</td><td>Top trigger in 10 of 11 sources</td><td>Medium: 12%</td><td>Not raised</td></tr>
     </tbody>
   </table></div>
-  <p class="lede" style="margin-top:18px">Target chosen: the first tight month in a young salaried first-timer's first year, when the SIP date collides with a cash shortfall. The engine shows it is common and severe; interviews showed why: the break is temporary and cash-driven, yet it counts as a lapse.</p>
+  <p class="meta" style="font-size:.9rem;color:var(--ink)">Target chosen: the first tight month in a young salaried first-timer's first year, when the SIP date collides with a cash shortfall. The engine shows it is common and severe; interviews showed why: the break is temporary and cash-driven, yet it counts as a lapse.</p>
 </div></section>
 </main>
 
-<footer><div class="wrap">
-  Research prototype for a product case study. Not investment advice, no fund recommendations, not affiliated with Groww. Live tags use Claude Haiku 5.5 with tagging prompt v1.5; text you paste is sent to the AI service for tagging and is not stored by this site.
-</div></footer>
+<footer><div class="wrap">Research prototype for a product case study. Not investment advice, no fund recommendations, not affiliated with Groww. Live tags use Claude Haiku 5.5 with tagging prompt v1.5; pasted text is sent to the AI service for tagging and is not stored by this site.</div></footer>
 
 <script>
 const EXAMPLES = [
@@ -700,11 +766,37 @@ const EXAMPLES = [
   "confidence": "high"
  }
 ];
+const CODEBOOK = {"Q1": {"type": "one", "options": ["MF explicit", "MF inferred", "Stock, ETF or Gold", "Unclear"]}, "Q2": {"type": "one", "options": ["First-time, stated", "First-time, inferred", "Experienced", "Not clear"]}, "Q3a": {"type": "several", "options": ["Tax saving", "Retirement", "Education", "Specific purchase or life event", "Emergency fund or safety net", "Grow wealth (no specific goal)", "Build a saving habit", "Trying it out / easy small start"]}, "Q3b": {"type": "several", "options": ["High returns", "Quick results", "Steady growth, no drops", "Money is safe, like FD/RD", "Easy access to money", "Ups and downs", "Growth over years", "Didn't know what to expect"]}, "Q4": {"type": "several", "options": ["Family or partner", "Friends or colleagues", "Online creator or content", "Financial advisor, CA or bank", "Course, college or workshop", "General MF or SIP awareness ad", "Groww or other app's ad or offer", "Own research or decision"]}, "Q5": {"type": "one", "options": ["Not started yet", "Month 0 to 1", "Months 2 to 3", "Months 4 to 6", "Months 7 to 12", "Under 12 months, exact unclear", "Over 12 months"]}, "Q6": {"type": "several", "options": ["Still continuing", "Increased or added a SIP", "Reduced amount", "Changed SIP date", "Skipped", "Cancelled", "Stopped (method unclear)", "Moved to another app", "Payment failed", "Auto-cancelled", "Resumed after a gap", "Considering stopping", "Not started yet", "Withdrew money"]}, "Q7": {"type": "several", "options": ["Income dropped or job change", "Expenses went up or new priority", "Needed money (emergency or expense)", "Goal completed", "Saw losses", "Returns lower than expected", "Markets fell (news)", "Markets rose", "Wanted to pause", "Wanted to change amount or date", "Not enough balance", "Bank or mandate issue", "App technical issue", "Unexpected charges or tax", "KYC or account verification issue", "Advice from family or friends", "Influencer or online content", "Stopped believing SIPs work for them", "Unhappy with Groww", "Found a better option elsewhere", "Forgot or lost interest"]}, "Q8": {"type": "several", "options": ["Reading returns, terms and charts", "Fund types and categories", "Whether a drop is normal / why it moves", "How long until results", "Setting up AutoPay or mandate", "Failed instalment", "Unexpected or extra debit", "SIP status (is it running)", "Payment taken, investment not showing", "KYC or account status", "How to skip, pause, change or cancel", "What happens to invested money / withdrawing", "Charges, tax and lock-ins", "Am I doing it right", "Safety of money and platform"]}, "Q9a": {"type": "several", "options": ["Overall portfolio value or returns", "A single fund's value or returns", "Projected returns", "Statements and reports", "SIP and payment status", "Other or new funds", "Market, index or news"]}, "Q9b": {"type": "one", "options": ["Daily or more", "Weekly", "Monthly", "Rarely", "Never / stopped checking", "Around the SIP date", "When prompted"]}, "Q10": {"type": "several", "options": ["Family or partner", "Friends or colleagues", "Videos or creators", "Online communities or forums", "Search, articles or finance websites", "AI chatbots", "CA, advisor or other professional", "Official sources", "Their bank", "Groww help pages", "Groww customer support", "Didn't ask anyone"]}, "Q11": {"type": "several", "options": ["Pause option", "Easier ways to change, skip or restart", "Reminders and payment alerts", "Easier recovery after a failed instalment", "Clear SIP status", "Simpler numbers and terms on screen", "Learning content", "Knowing what's normal", "Goal progress tracking", "Better or faster support", "Personal guidance or fund recommendations", "Clear charges and tax info"]}, "S1": {"type": "several", "options": ["SIP setup", "AutoPay or mandate", "Fund page or explore", "KYC or onboarding", "Skip", "Cancel flow", "Edit amount or date", "Step-up or top-up", "Withdraw or redeem", "Portfolio or returns screen", "SIP calculator", "Statements and reports", "Notifications", "Customer support or help", "Other feature"]}, "S2": {"type": "several", "options": ["Zerodha", "INDmoney", "ET Money", "Paytm Money", "Kuvera", "Other app"]}, "S4": {"type": "one", "options": ["Own experience", "Someone they know", "People in general or clients", "Not clear"]}, "S3_age": {"type": "one", "options": ["Under 25", "25 to 34", "35 to 44", "45 and over"]}, "S3_income": {"type": "one", "options": ["Salaried", "Self-employed or business", "Freelance, gig or irregular", "Student or no income"]}, "S3_source": {"type": "one", "options": ["Salary", "Business or freelance income", "Family or pocket money", "Bonus or one-off money"]}};
+
+// ---------- Theme toggle (follows the system until the visitor picks one) ----------
+const rootEl = document.documentElement;
+const isDark = () => rootEl.dataset.theme ? rootEl.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+const themeBtn = document.getElementById('theme');
+const syncThemeBtn = () => { themeBtn.textContent = isDark() ? 'Light mode' : 'Dark mode'; };
+themeBtn.addEventListener('click', () => {
+  const next = isDark() ? 'light' : 'dark';
+  rootEl.dataset.theme = next;
+  try { localStorage.setItem('theme', next); } catch (e) {}
+  syncThemeBtn();
+});
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', syncThemeBtn);
+syncThemeBtn();
 
 const NAMES = { Q1:'Kind of SIP', Q2:'First-time investor?', Q3a:'Why they started', Q3b:'What they expected', Q4:'Who influenced them',
   Q5:'Stage in the journey', Q6:'What they did', Q7:'What triggered it', Q8:'What worried or confused them', Q9a:'What they check',
-  Q9b:'How often', Q10:'Where they go when unsure', Q11:'What they wish for', S1:'App feature mentioned', S2:'Other app mentioned',
-  S3_age:'Age', S3_income:'Income type', S3_source:'Money source', S4:'Whose experience' };
+  Q9b:'How often they check', Q10:'Where they go when unsure', Q11:'What they wish for', S1:'App feature mentioned', S2:'Other app mentioned',
+  S3_age:'Age', S3_income:'Income type', S3_source:'Source of money', S4:'Whose experience' };
+const QUESTION = { Q1:'What kind of SIP?', Q2:'First-time or new investor?', Q3a:'Why did they start?', Q3b:'What did they expect? (stated only)',
+  Q4:'Who influenced them to start?', Q5:'How far into their SIP journey?', Q6:'What did they do, or consider doing?', Q7:'What triggered that action?',
+  Q8:'What confused or worried them?', Q9a:'What do they check?', Q9b:'How often do they check?', Q10:'Where do they go outside the app when unsure?',
+  Q11:'What did they wish for? (stated only)', S1:'Which app feature is mentioned?', S2:'Which other app is mentioned?',
+  S3_age:'Age, if stated', S3_income:'Income type, if stated', S3_source:'Source of the money, if stated', S4:'Whose experience is this?' };
+const GROUPS = [
+  ['Who is speaking', ['Q1','Q2','S4','S3_age','S3_income','S3_source']],
+  ['Starting', ['Q3a','Q3b','Q4','Q5']],
+  ['Staying or stopping', ['Q6','Q7','Q8']],
+  ['Checking and getting help', ['Q9a','Q9b','Q10','Q11']],
+  ['App context', ['S1','S2']] ];
 const ORDER = Object.keys(NAMES);
 const RELIABILITY = { Q1:['pass','100%'], Q2:['pass','100%'], Q5:['pass','80%'], Q7:['pass','80%'], Q9a:['pass','75%'], Q10:['pass','78%'],
   S2:['pass','100%'], S4:['pass','100%'], Q6:['below','44%'], Q8:['below','67%'], S1:['below','45%'] };
@@ -787,27 +879,40 @@ function derive(tags) {
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function relBadge(f) {
   const r = RELIABILITY[f];
-  if (!r) return '<span class="rel small">Too few to score</span>';
+  if (!r) return '<span class="rel small">Too few golden items to score</span>';
   return r[0] === 'pass' ? '<span class="rel ok">✓ Passed (' + r[1] + ')</span>' : '<span class="rel warn">! Below bar (' + r[1] + ')</span>';
+}
+function renderCodebook() {
+  let h = '';
+  GROUPS.forEach(([g, fields]) => {
+    h += '<div class="glabel">' + esc(g) + '</div>';
+    fields.forEach(f => {
+      const c = CODEBOOK[f];
+      h += '<div class="qcard"><div class="qt"><b><span class="id">' + esc(f.replace('_',' ')) + '</span>' + esc(QUESTION[f]) + '</b><span>' + (c.type === 'one' ? 'one answer' : 'several allowed') + '</span></div>'
+        + '<div class="opts">' + c.options.map(o => '<span>' + esc(o) + '</span>').join('') + '</div>' + relBadge(f) + '</div>';
+    });
+  });
+  document.getElementById('cb').innerHTML = h;
 }
 function renderResult(r, opts) {
   const d = derive(r.tags);
-  const verdictText = { passed:['ok','Passed all quality checks'], warnings:['warn','Shown with warnings'], not_relevant:['warn','Probably not about a SIP'] }[r.verdict] || ['ok','Stored result'];
+  const vt = { passed:['ok','Passed all quality checks'], warnings:['warn','Shown with warnings'], not_relevant:['warn','Probably not about a SIP'] }[r.verdict];
   let h = '';
-  if (opts && opts.stored) h += '<p class="small" style="margin-top:0">Stored result from the full run (4 Nov 2026), item ' + esc(opts.key) + '.</p>';
-  else h += '<div class="verdict"><span class="badge ' + verdictText[0] + '">' + esc(verdictText[1]) + '</span><span class="small">Confidence: ' + esc(r.confidence) + '</span></div>';
-  h += '<div class="small">What the AI read</div><div class="ctx">' + esc(r.context) + '</div>';
+  if (opts && opts.stored) h += '<p class="small" style="margin:0 0 6px">Stored result from the full run (4 Nov 2026), item ' + esc(opts.key) + '.</p>';
+  else if (vt) h += '<div class="verdict"><span class="badge ' + vt[0] + '">' + esc(vt[1]) + '</span><span class="small">Model confidence: ' + esc(r.confidence) + '</span></div>';
   h += '<div class="trace" aria-label="How this item feeds the metric">'
     + '<div><div class="k">Scope</div><div class="v">' + esc(d.scope[0]) + '</div><div class="s">' + esc(d.scope[1]) + '</div></div>'
     + '<div><div class="k">Voice</div><div class="v">' + esc(d.lane) + '</div><div class="s">' + esc(vals(r.tags,'S4')[0] || 'Not clear') + '</div></div>'
     + '<div><div class="k">Metric tree</div><div class="v">' + esc(d.path) + '</div>' + (d.flag ? '<div class="s">' + esc(d.flag) + '</div>' : '') + '</div>'
     + '<div><div class="k">Findings view</div><div class="v">' + (d.tier ? 'Tier ' + esc(TIER_NAME[d.tier]) : 'No severity tier') + '</div><div class="s">Path: ' + esc(d.paths.length ? d.paths.join(', ') : 'none') + '</div></div>'
     + '</div>';
+  h += '<div class="two"><div><p class="cap">What the AI read</p><div class="ctx">' + esc(r.context) + '</div></div>';
   if (r.checks) {
-    h += '<div class="small">Quality checks (code, run on every answer)</div><ul class="checks">';
+    h += '<div><p class="cap">Quality checks (code, on every answer)</p><ul class="checks">';
     r.checks.forEach(c => { h += '<li><span class="ic ' + (c.pass ? 'ok' : 'warn') + '" aria-label="' + (c.pass ? 'passed' : 'warning') + '">' + (c.pass ? '✓' : '!') + '</span><span>' + esc(c.label) + '</span>' + (c.detail ? '<span class="d">' + esc(c.detail) + '</span>' : '') + '</li>'; });
-    h += '</ul>';
-  }
+    h += '</ul></div>';
+  } else h += '<div><p class="cap">Model\'s reading</p><p class="small" style="margin:4px 0">' + esc(r.reason || '') + '</p></div>';
+  h += '</div>';
   h += '<div class="tablewrap"><table><thead><tr><th>Question</th><th>Answer</th><th>Words quoted</th><th>Golden-set check</th></tr></thead><tbody>';
   ORDER.forEach(f => {
     const t = r.tags[f]; if (!t) return;
@@ -817,13 +922,13 @@ function renderResult(r, opts) {
       + (t.clue ? '"' + esc(t.clue) + '"' + (t.src === 'context' ? ' <span class="small">(from context)</span>' : '') : '') + '</td><td>' + relBadge(f) + '</td></tr>';
   });
   h += '</tbody></table></div>';
-  if (r.reason) h += '<p class="meta">Model\'s one-line reading: ' + esc(r.reason) + '</p>';
+  if (r.checks && r.reason) h += '<p class="meta">Model\'s reading: ' + esc(r.reason) + '</p>';
   if (opts && opts.meta) h += '<p class="meta">' + esc(opts.meta) + '</p>';
-  h += '<p class="meta">Questions not shown were not mentioned in the text. Reliability comes from the 20-item golden set; treat "below bar" tags as indicative only.</p>';
+  h += '<p class="meta">Questions not listed were not mentioned in the text. See the <a href="#codebook">codebook</a> for every question and option.</p>';
   return h;
 }
 function renderFallback(message) {
-  let h = '<div class="fallback"><b>Live tagging is unavailable.</b> ' + esc(message) + '</div><p class="small">These are real items with the tags the engine gave them in the full run, passed through the same rules.</p>';
+  let h = '<div class="fallback"><b>Live tagging is unavailable.</b> ' + esc(message) + '</div><p class="small" style="margin:0 0 4px">Real items with the tags the engine gave them in the full run, passed through the same rules:</p>';
   EXAMPLES.forEach((e, i) => { h += '<details' + (i === 0 ? ' open' : '') + '><summary>' + esc(e.title) + '</summary><div>' + renderResult(e, { stored:true, key:e.key }) + '</div></details>'; });
   return h;
 }
@@ -841,25 +946,24 @@ function syncForm() {
 $('src').addEventListener('change', syncForm);
 $('text').addEventListener('input', () => { $('cnt').textContent = $('text').value.length.toLocaleString('en-IN'); });
 syncForm();
+renderCodebook();
 
 const SRC_MAP = s => s.endsWith('_play') || s.endsWith('_appstore') ? 'app_review' : s === 'youtube_comments' ? 'youtube' : s === 'tradingqna' ? 'forum_question' : 'reddit_post';
 function loadExample(e) {
   const lines = e.context.split('\n');
   const get = p => { const l = lines.find(x => x.startsWith(p)); return l ? l.slice(p.length) : ''; };
   let src = SRC_MAP(e.source);
-  const parent = get('Replying to: ') || get('Original post: ') || get('Opening question: ');
-  if (src === 'reddit_post' && /^(Comment): /m.test(e.context)) src = 'reddit_comment';
+  if (src === 'reddit_post' && /^Comment: /m.test(e.context)) src = 'reddit_comment';
   if (src === 'forum_question' && /^Reply: /m.test(e.context)) src = 'forum_reply';
   $('src').value = src; syncForm();
   $('app').value = get('App: ') || 'Groww';
   $('title').value = get('Video title: ') || get('Post title: ') || get('Thread title: ');
-  $('parent').value = parent;
+  $('parent').value = get('Replying to: ') || get('Original post: ') || get('Opening question: ');
   $('text').value = lines[lines.length - 1].replace(/^(Review|Comment|Reply|Post|Question): /, '');
   $('text').dispatchEvent(new Event('input'));
   $('status').textContent = 'Loaded. Select "Tag this text" to run it live.';
-  $('text').focus();
 }
-EXAMPLES.forEach(e => { const b = document.createElement('button'); b.type = 'button'; b.className = 'btn ghost'; b.textContent = e.title; b.onclick = () => loadExample(e); $('samples').appendChild(b); });
+EXAMPLES.forEach(e => { const b = document.createElement('button'); b.type = 'button'; b.className = 'chip'; b.textContent = e.title; b.onclick = () => loadExample(e); $('samples').appendChild(b); });
 
 $('f').addEventListener('submit', async ev => {
   ev.preventDefault();
@@ -884,6 +988,7 @@ $('f').addEventListener('submit', async ev => {
     out.innerHTML = renderFallback('The page could not reach the tagger. The pre-tagged examples below show what it produces.');
     $('status').textContent = '';
   } finally { go.disabled = false; }
+  if (window.innerWidth < 900) out.scrollIntoView({ behavior: 'smooth', block: 'start' });
 });
 </script>
 </body>
