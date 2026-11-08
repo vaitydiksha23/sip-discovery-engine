@@ -1,0 +1,341 @@
+{
+ "version": "v1.5",
+ "instructions": "You are helping a product research team tag user comments about investing apps in India (Groww and others). Items may be in English, Hindi, Marathi or Hinglish (Hindi or Marathi typed in English letters), often with misspellings and short forms (amt, acc, bcoz, pls). Read them for meaning.\n\nEvery item has already been judged relevant to people's experience of SIPs or mutual funds. Your job: answer a fixed set of questions about each item, choosing only from the options listed, using the exact option names.\n\nHOW TO READ AN ITEM\n- The line labelled Review, Comment, Reply, Post or Question is the item. Lines labelled App, Video title, Post title, Thread title, Original post, Opening question or Replying to are context.\n- Use context only to understand what the item means. Never use context to add facts about the person. Under \"Stopped my SIP after the crash\", the reply \"Same here\" means this person stopped a SIP, but their reason is unknown.\n- \"Same question\" adopts the parent's question. \"Same here\" or \"me too\" confirms the situation, not the parent's reasons.\n- The item's own words win over context.\n- Tag what the item describes, not how strongly it is said. Strong words alone create no tag.\n- A question about something that might happen is not an action that happened.\n- Tag what is described even when it is about other people; S4 records whose experience it is.\n- Never guess. If the item does not say it, leave the question out (it then counts as the fallback).\n\nQUESTIONS AND OPTIONS\n(one) = exactly one option. (several) = all that apply.\n\nQ1 What kind of SIP? (one): MF explicit | MF inferred | Stock, ETF or Gold | Unclear\n- MF explicit: the item names it: mutual fund, MF, a fund name, a fund house, a fund category, or #mutualfunds in the item itself.\n- MF inferred: not named, but a clear clue points to MF: an MF term (NAV, units allotted, folio), a plain \"fund\", the app Zerodha Coin (MF only), or an MF-specific title in context (mutual fund, index fund). Q1 is the only question that may take its clue from context; report where the clue came from.\n- Stock, ETF or Gold: owned stocks (shares, a company name, quantity, stock SIP, position, square off), ETF or gold.\n- Unclear: no clue, or both types held. \"SIP\" alone on Groww or INDmoney is Unclear: they also offer stock SIPs.\n- If they hold both stocks and mutual funds but the SIP itself is clearly MF or index-fund based, tag MF (explicit if MF or a fund is named). Unclear is only for when you cannot tell what the SIP is.\n- Not clues on their own: the stock market, Nifty or a crash (environment, not a holding); mandate, NACH, AutoPay; \"holdings\"; \"SIP\" or \"investing\" in a title. A \"fund\" that is an ETF, PPF or an emergency fund (savings) is not an MF clue.\n\nQ2 First-time or new investor? (one): First-time, stated | First-time, inferred | Experienced | Not clear\n- Stated: says first SIP, first investment, or never invested before.\n- Inferred: a beginner signal: asks what a basic term means, surprised value can fall below what they put in, calls themselves new or a beginner.\n- Experienced: invested for years, works in finance, or clear expertise. Time spent investing counts: \"investing since 2015\", \"doing SIPs for 4 years\", or using an app to invest for years is Experienced (unlike Q5, where time on an app does not count).\n- \"Started SIP today\" is timing (Q5), not a first-time signal. A complaint is not a beginner signal.\n\nQ3a Why did they start? (several): Tax saving | Retirement | Education | Specific purchase or life event | Emergency fund or safety net | Grow wealth (no specific goal) | Build a saving habit | Trying it out / easy small start\n\nQ3b What did they expect? (several, stated only): High returns | Quick results | Steady growth, no drops | Money is safe, like FD/RD | Easy access to money | Ups and downs | Growth over years | Didn't know what to expect\n- Only expectations about what their SIP or investing would deliver, stated with words like \"I thought\", \"expected\", \"was told\", \"everyone said\".\n- Never infer an expectation from a complaint (\"returns are bad\" is not Q3b).\n- Expectations about a transaction (money arriving by 2pm, an order time) are not Q3b.\n- Hypothetical calculations or projections (\"imagine 18% for 30 years\", calculator results) are not Q3b; tag Q9a Projected returns instead.\n\nQ4 Who influenced them to start? (several): Family or partner | Friends or colleagues | Online creator or content | Financial advisor, CA or bank | Course, college or workshop | General MF or SIP awareness ad | Groww or other app's ad or offer | Own research or decision\n- Only influence on starting. \"Own research or decision\" only when they say so. \"Everyone told me it gives 15%\" shapes an expectation (Q3b), not who got them to start.\n\nQ5 How far into their SIP journey? (one): Not started yet | Month 0 to 1 | Months 2 to 3 | Months 4 to 6 | Months 7 to 12 | Under 12 months, exact unclear | Over 12 months\n- The time must be attached to their SIP, not to using the app.\n- Tag the stage at the action if one is described, otherwise the stage when writing. \"Started today\", \"just started\", \"first instalment\", \"just set up\" are Month 0 to 1. Someone in the middle of setting up their SIP or AutoPay is also Month 0 to 1. \"A few months\", \"recently\" are Under 12 months, exact unclear. \"Years\" is Over 12 months. \"I have started my SIP\" with no time word: leave out.\n\nQ6 What did they do (or consider doing)? (several): Still continuing | Increased or added a SIP | Reduced amount | Changed SIP date | Skipped | Cancelled | Stopped (method unclear) | Moved to another app | Payment failed | Auto-cancelled | Resumed after a gap | Considering stopping | Not started yet | Withdrew money\n- Still continuing only if they say the SIP is ongoing. \"Using mutual funds\" or \"using the app\" is not.\n- Skipped only when the user chose to skip. \"My SIP got skipped\" or \"didn't go through\" is Payment failed. Unclear who did it, or \"paused\", is Stopped (method unclear).\n- Auto-cancelled only if the SIP ended without the user cancelling. \"About to cancel\" has not happened yet.\n- A new SIP after cancelling is Resumed after a gap.\n- Trying to cancel or pause (\"can't find the cancel option\") is Considering stopping.\n- \"Got cancelled\" with nobody named is Stopped (method unclear). Auto-cancelled only when they say they did not cancel it, or it was cancelled after failures or skips.\n- Not started yet only when they say they have not started or plan to start; asking which fund to choose is not enough.\n- Moved to another app only when they say they left or moved their investments.\n- Money not deducted on the date is Payment failed.\n- Considering stopping is about the person's own SIP. \"Everyone is stopping\" is Stopped (method unclear) with S4 = People in general or clients.\n- Starting a SIP is not an option here: use Q5.\n\nQ7 What triggered that action? (several): Income dropped or job change | Expenses went up or new priority | Needed money (emergency or expense) | Goal completed | Saw losses | Returns lower than expected | Markets fell (news) | Markets rose | Wanted to pause | Wanted to change amount or date | Not enough balance | Bank or mandate issue | App technical issue | Unexpected charges or tax | KYC or account verification issue | Advice from family or friends | Influencer or online content | Stopped believing SIPs work for them | Unhappy with Groww | Found a better option elsewhere | Forgot or lost interest\n- Tag the cause the item describes, not the mechanism involved. If they rule out balance or the mandate (\"balance was there\", \"biller added and approved\") and blame the app, it is App technical issue.\n- A trigger can be tagged with no action (portfolio red and stressful = Saw losses). An action can have no trigger.\n- A trigger is an event, not an opinion. \"Market is risky\" is not Markets fell.\n- Saw losses: their own investment is negative. Returns lower than expected: positive but disappointing. Markets fell (news): what they heard or read. A market fall or low that prompted an action (for example, increasing the SIP during a crash) is also Markets fell (news).\n- Never take a trigger from a parent comment.\n- A problem that blocks them (KYC, a technical error, a bank issue) is tagged even when no SIP action follows.\n\nQ8 What confused or worried them? (several): Reading returns, terms and charts | Fund types and categories | Whether a drop is normal / why it moves | How long until results | Setting up AutoPay or mandate | Failed instalment | Unexpected or extra debit | SIP status (is it running) | Payment taken, investment not showing | KYC or account status | How to skip, pause, change or cancel | What happens to invested money / withdrawing | Charges, tax and lock-ins | Am I doing it right | Safety of money and platform\n- Confusion or worry, shown by a question or by saying they don't know. Disliking something they understand is a complaint, not Q8.\n- Options are topics: confused and worried about the same topic get the same option.\n- Failed instalment: it did not go through. Unexpected or extra debit: money went out unexpectedly. Payment taken, investment not showing: expected debit, no result visible.\n- Asking which fund is best, or whether their fund choice is right, is Am I doing it right. Fund types and categories is only for not understanding what a fund or category is (\"what is small cap?\"). Tag both when both are shown.\n\nQ9a What do they check? (several): Overall portfolio value or returns | A single fund's value or returns | Projected returns | Statements and reports | SIP and payment status | Other or new funds | Market, index or news\n- Checking means looking at something to see how they are doing. Completing a task (verifying, selling, setting up) is not checking.\n\nQ9b How often? (one): Daily or more | Weekly | Monthly | Rarely | Never / stopped checking | Around the SIP date | When prompted\n- If both a regular frequency and an event are mentioned, pick the regular one.\n\nQ10 Where do they go outside the app when unsure? (several): Family or partner | Friends or colleagues | Videos or creators | Online communities or forums | Search, articles or finance websites | AI chatbots | CA, advisor or other professional | Official sources | Their bank | Groww help pages | Groww customer support | Didn't ask anyone\n- Asking a creator in the comments under their video counts as Videos or creators. A question posted on a forum (Reddit, TradingQ&A) counts as Online communities or forums. Any question posted as a comment or reply under a video counts, with or without \"sir\". Calling or contacting Groww's customer care counts as Groww customer support.\n- Didn't ask anyone only when stated.\n\nQ11 What did they wish for? (several, stated only): Pause option | Easier ways to change, skip or restart | Reminders and payment alerts | Easier recovery after a failed instalment | Clear SIP status | Simpler numbers and terms on screen | Learning content | Knowing what's normal | Goal progress tracking | Better or faster support | Personal guidance or fund recommendations | Clear charges and tax info\n- Only a stated wish or request: \"I wish\", \"please add\", \"should have\", \"pls improve\", Hindi \"laye\" or \"do\". A complaint (\"no way to...\", \"why isn't this a priority\", \"won't recommend\") is not a wish.\n- A direct question for advice (\"which fund should I choose?\") is Q8 and Q10, not Q11. Personal guidance or fund recommendations only when they want the app or service to provide guidance. A request for a feedback or \"suggestions\" box (to send ideas to the company) is not Personal guidance; tag S1 Other feature.\n\nS1 Feature mentioned (several): SIP setup | AutoPay or mandate | Fund page or explore | KYC or onboarding | Skip | Cancel flow | Edit amount or date | Step-up or top-up | Withdraw or redeem | Portfolio or returns screen | SIP calculator | Statements and reports | Notifications | Customer support or help | Other feature\n- The part of the app the item names or clearly describes, including when they complain they cannot see or find it. For Other feature, quote it in the clue.\n- General interface or design, and memberships, are not features. SIP setup only when setup steps are described; \"I started my SIP\" is not SIP setup.\n\nS2 Other app mentioned (several): Zerodha | INDmoney | ET Money | Paytm Money | Kuvera | Other app\n- Kite and Coin count as Zerodha. For Other app, quote its name in the clue. Do not tag the app the item is about (shown as App in context).\n- Take S2 only from the item's own words, never from titles or parent comments. Not tagging the app applies only to app reviews (items with an App line). In YouTube comments, Reddit and forums, tag any app the item names, including the one the video or thread is about. In a competitor's app review, Groww named in the item is Other app.\n\nS3 Segment signals, only when stated (one each):\n- S3_age: Under 25 | 25 to 34 | 35 to 44 | 45 and over (a stated age, or a life stage that fixes it, like \"in college\")\n- S3_income: Salaried | Self-employed or business | Freelance, gig or irregular | Student or no income\n- S3_source: Salary | Business or freelance income | Family or pocket money | Bonus or one-off money\n- Never infer from writing style or username.\n\nS4 Whose experience is this? (one): Own experience | Someone they know | People in general or clients | Not clear\n- Advice, analysis or claims about investors in general, with no description of the writer's own SIP, is People in general or clients. Use Not clear only when you cannot tell at all.\n\nBEFORE ANSWERING\nGo through every question for every item, not only the main point. Secondary questions are often answered in passing: time (\"since 2 years\" = Q5 Over 12 months), what they look at (\"NAV down 10%\" = Q9a A single fund's value or returns), a beginner question (\"autopay kya h\" = Q2 First-time, inferred), where they ask (a question under a video = Q10 Videos or creators; calling support = Q10 Groww customer support).\n\nOUTPUT\nFor each item return:\n- id: the item's id\n- tags: an object with one entry per question that has an answer. Always include Q1 and S4. Leave out every other question with no answer. Each entry: {\"v\": [options], \"clue\": \"exact words from the item, under 10 words\"}. For Q1 also add \"src\": \"item\" or \"context\" (and the clue may then come from context). For Q1, Q2 and S4 a fallback answer (Unclear, Not clear) has an empty clue.\n- reason: one line, under 20 words\n- confidence: high, medium or low\n\nReturn only a JSON array with one object per item, in the same order, and no other text.",
+ "examples": [
+  [
+   "App: Groww\nReview: Worst app & support. I have taken an SIP using Groww. And added biller in my bank account. First time SIP instalment got cancelled, I rechecked with bank account that biller was added and approved. Contacted support they told me once you add biller you don't need to do anything. After that month one more time SIP instalment got cancelled. Now yesterday 3rd time instalment could not be deducted, and SIP about to cancel if next instalment get cancelled. Pls improve your support and remove bugs",
+   {
+    "tags": {
+     "Q1": {
+      "v": [
+       "Unclear"
+      ],
+      "clue": "",
+      "src": "item"
+     },
+     "Q5": {
+      "v": [
+       "Months 2 to 3"
+      ],
+      "clue": "3rd time instalment could not be deducted"
+     },
+     "Q6": {
+      "v": [
+       "Payment failed"
+      ],
+      "clue": "SIP instalment got cancelled"
+     },
+     "Q7": {
+      "v": [
+       "App technical issue"
+      ],
+      "clue": "biller was added and approved"
+     },
+     "Q8": {
+      "v": [
+       "Failed instalment"
+      ],
+      "clue": "Contacted support they told me"
+     },
+     "Q10": {
+      "v": [
+       "Groww customer support"
+      ],
+      "clue": "Contacted support"
+     },
+     "Q11": {
+      "v": [
+       "Better or faster support"
+      ],
+      "clue": "Pls improve your support"
+     },
+     "S1": {
+      "v": [
+       "AutoPay or mandate",
+       "Customer support or help"
+      ],
+      "clue": "added biller in my bank account"
+     },
+     "S4": {
+      "v": [
+       "Own experience"
+      ],
+      "clue": "I have taken an SIP"
+     }
+    },
+    "reason": "Instalments failed three times despite an approved biller; not yet auto-cancelled; asks for better support.",
+    "confidence": "high"
+   }
+  ],
+  [
+   "App: Groww\nReview: not helping..don't start sip through this app.. not working m we have to do manual investing. even after activating Autopay sips gets cancelled. bank balance everything was there. not working. won't recommend. using this for mutual fund mainly.",
+   {
+    "tags": {
+     "Q1": {
+      "v": [
+       "MF explicit"
+      ],
+      "clue": "using this for mutual fund mainly",
+      "src": "item"
+     },
+     "Q6": {
+      "v": [
+       "Auto-cancelled"
+      ],
+      "clue": "even after activating Autopay sips gets cancelled"
+     },
+     "Q7": {
+      "v": [
+       "App technical issue"
+      ],
+      "clue": "bank balance everything was there"
+     },
+     "S1": {
+      "v": [
+       "AutoPay or mandate"
+      ],
+      "clue": "activating Autopay"
+     },
+     "S4": {
+      "v": [
+       "Own experience"
+      ],
+      "clue": "using this for mutual fund"
+     }
+    },
+    "reason": "SIPs cancelled despite AutoPay and enough balance; app fault. 'Won't recommend' is not a wish.",
+    "confidence": "high"
+   }
+  ],
+  [
+   "App: INDmoney\nReview: Very good. SIP Skip karne ka option laye.",
+   {
+    "tags": {
+     "Q1": {
+      "v": [
+       "Unclear"
+      ],
+      "clue": "",
+      "src": "item"
+     },
+     "Q11": {
+      "v": [
+       "Easier ways to change, skip or restart"
+      ],
+      "clue": "SIP Skip karne ka option laye"
+     },
+     "S1": {
+      "v": [
+       "Skip"
+      ],
+      "clue": "SIP Skip karne ka option"
+     },
+     "S4": {
+      "v": [
+       "Own experience"
+      ],
+      "clue": "Very good"
+     }
+    },
+    "reason": "Hinglish request to add a skip option: a stated wish.",
+    "confidence": "high"
+   }
+  ],
+  [
+   "App: INDmoney\nReview: Unintuitive app. No way to remove/delete SIPs from the list all I can do is pause. no way to use wallet balance for SIP, I have no idea why this is not one of the priorities.",
+   {
+    "tags": {
+     "Q1": {
+      "v": [
+       "Unclear"
+      ],
+      "clue": "",
+      "src": "item"
+     },
+     "S1": {
+      "v": [
+       "Cancel flow",
+       "Other feature"
+      ],
+      "clue": "No way to remove/delete SIPs; wallet balance for SIP"
+     },
+     "S4": {
+      "v": [
+       "Own experience"
+      ],
+      "clue": "all I can do is pause"
+     }
+    },
+    "reason": "Complaints about missing controls; no stated wish and no confusion.",
+    "confidence": "medium"
+   }
+  ],
+  [
+   "Video title: Mutual Fund is Safe or Not I By Sandeep Maheshwari #shorts\nComment: Sir agr mai app me mutual fund me paisa invest krta hu to agr wo grow app ya angel one app band ho jayega tb wo to Paisa gya sir plzz mere bato ka ans jarur dijiyega",
+   {
+    "tags": {
+     "Q1": {
+      "v": [
+       "MF explicit"
+      ],
+      "clue": "mutual fund me paisa invest",
+      "src": "item"
+     },
+     "Q8": {
+      "v": [
+       "Safety of money and platform"
+      ],
+      "clue": "app band ho jayega tb wo to Paisa gya"
+     },
+     "Q10": {
+      "v": [
+       "Videos or creators"
+      ],
+      "clue": "sir plzz mere bato ka ans"
+     },
+     "S2": {
+      "v": [
+       "Other app"
+      ],
+      "clue": "angel one app"
+     },
+     "S4": {
+      "v": [
+       "Own experience"
+      ],
+      "clue": "mai app me mutual fund me paisa"
+     }
+    },
+    "reason": "Worried money is lost if the app shuts down ('band' = app closing, not stopping a SIP); asks creator.",
+    "confidence": "high"
+   }
+  ],
+  [
+   "Video title: Mutual Fund sip cancel karne par kitna paisa milta hai | Sip Close | Full Guide Hindi\nReplying to: Sir agar sip cancel kiya or money redeem nahi kiya Or firse wapas sip start kiya to kya sip amount pehle wali amount me add ho jayegi ya fir new sip hoga\nReply: Same question",
+   {
+    "tags": {
+     "Q1": {
+      "v": [
+       "MF inferred"
+      ],
+      "clue": "Mutual Fund sip cancel",
+      "src": "context"
+     },
+     "Q8": {
+      "v": [
+       "What happens to invested money / withdrawing"
+      ],
+      "clue": "Same question"
+     },
+     "Q10": {
+      "v": [
+       "Videos or creators"
+      ],
+      "clue": "Same question"
+     },
+     "S4": {
+      "v": [
+       "Own experience"
+      ],
+      "clue": "Same question"
+     }
+    },
+    "reason": "Adopts the parent's question about money after cancelling and restarting; no action described.",
+    "confidence": "medium"
+   }
+  ],
+  [
+   "App: Groww\nReview: I done a withdrawal request yesterday 10 am. It was showing in the screen that the amount will be withdrawn in your account today 2pm. But the amount is not withdrawn yet. Also it is not showing any expected time on the screen. In the customer care support number, we are waiting for 30 Minutes with no response.",
+   {
+    "tags": {
+     "Q1": {
+      "v": [
+       "Unclear"
+      ],
+      "clue": "",
+      "src": "item"
+     },
+     "Q6": {
+      "v": [
+       "Withdrew money"
+      ],
+      "clue": "I done a withdrawal request"
+     },
+     "Q8": {
+      "v": [
+       "What happens to invested money / withdrawing"
+      ],
+      "clue": "not showing any expected time"
+     },
+     "Q10": {
+      "v": [
+       "Groww customer support"
+      ],
+      "clue": "customer care support number"
+     },
+     "S1": {
+      "v": [
+       "Withdraw or redeem",
+       "Customer support or help"
+      ],
+      "clue": "withdrawal request; customer care support number"
+     },
+     "S4": {
+      "v": [
+       "Own experience"
+      ],
+      "clue": "I done a withdrawal request"
+     }
+    },
+    "reason": "Withdrawal delayed with no expected time; a transaction expectation, not a Q3b expectation.",
+    "confidence": "high"
+   }
+  ],
+  [
+   "App: Groww\nReview: Everyone told me SIP gives 15% every year. After 8 months I'm at 2%, so I stopped it.",
+   {
+    "tags": {
+     "Q1": {
+      "v": [
+       "Unclear"
+      ],
+      "clue": "",
+      "src": "item"
+     },
+     "Q3b": {
+      "v": [
+       "High returns"
+      ],
+      "clue": "Everyone told me SIP gives 15%"
+     },
+     "Q5": {
+      "v": [
+       "Months 7 to 12"
+      ],
+      "clue": "After 8 months"
+     },
+     "Q6": {
+      "v": [
+       "Stopped (method unclear)"
+      ],
+      "clue": "so I stopped it"
+     },
+     "Q7": {
+      "v": [
+       "Returns lower than expected"
+      ],
+      "clue": "I'm at 2%"
+     },
+     "S4": {
+      "v": [
+       "Own experience"
+      ],
+      "clue": "I stopped it"
+     }
+    },
+    "reason": "Stated expectation of 15%, low returns at 8 months, stopped.",
+    "confidence": "high"
+   }
+  ]
+ ]
+}
