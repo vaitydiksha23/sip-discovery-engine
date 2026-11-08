@@ -45,7 +45,16 @@ header.top .wrap{display:flex;align-items:center;gap:20px;min-height:52px;flex-w
 nav{display:flex;gap:18px;flex-wrap:wrap}
 nav a{text-decoration:none;color:var(--muted);font-weight:500;font-size:.95rem}
 nav a:hover{color:var(--ink)}
-.theme{font:inherit;font-size:.88rem;font-weight:500;color:var(--ink);background:var(--sunk);border:1px solid var(--rule);border-radius:999px;padding:4px 12px;cursor:pointer}
+.theme{display:inline-grid;place-items:center;width:34px;height:34px;padding:0;color:var(--ink);background:var(--sunk);border:1px solid var(--rule);border-radius:999px;cursor:pointer;flex:none}
+.theme:hover{border-color:var(--accent);color:var(--accent)}
+.theme svg{width:17px;height:17px}
+@media (max-width:640px){
+  header.top .wrap{gap:0 12px;min-height:0;padding-top:8px}
+  nav{order:3;width:100%;flex-wrap:nowrap;overflow-x:auto;gap:18px;padding:6px 0 8px;scrollbar-width:none}
+  nav::-webkit-scrollbar{display:none}
+  nav a{white-space:nowrap;font-size:.92rem}
+  html{scroll-padding-top:calc(92px + env(safe-area-inset-top,0px))}
+}
 
 /* hero: headline and the key numbers side by side */
 .hero{background:var(--band);border-bottom:1px solid var(--rule)}
@@ -160,7 +169,7 @@ footer{padding:20px 0 30px;color:var(--muted);font-size:.84rem}
 <header class="top"><div class="wrap">
   <div class="brand">SIP Discovery Engine</div>
   <nav aria-label="Sections"><a href="#try">Try it</a><a href="#codebook">Codebook</a><a href="#how">How it works</a><a href="#found">Findings</a></nav>
-  <button class="theme" id="theme" type="button" aria-label="Switch colour theme">Dark mode</button>
+  <button class="theme" id="theme" type="button" aria-label="Switch to dark mode" title="Switch to dark mode"></button>
 </div></header>
 
 <main>
@@ -784,7 +793,8 @@ const CODEBOOK = {"Q1": {"type": "one", "options": ["MF explicit", "MF inferred"
 const rootEl = document.documentElement;
 const isDark = () => rootEl.dataset.theme ? rootEl.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
 const themeBtn = document.getElementById('theme');
-const syncThemeBtn = () => { themeBtn.textContent = isDark() ? 'Light mode' : 'Dark mode'; };
+const SUN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>', MOON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>';
+const syncThemeBtn = () => { const d = isDark(); themeBtn.innerHTML = d ? SUN : MOON; const l = d ? 'Switch to light mode' : 'Switch to dark mode'; themeBtn.setAttribute('aria-label', l); themeBtn.title = l; };
 themeBtn.addEventListener('click', () => {
   const next = isDark() ? 'light' : 'dark';
   rootEl.dataset.theme = next;
